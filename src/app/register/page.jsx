@@ -43,9 +43,9 @@ export default function Register() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-r from-purple-500 via-pink-500 to-red-400">
-      <div className="bg-white/90 backdrop-blur-md p-10 rounded-2xl shadow-xl w-full max-w-md">
-        <h2 className="text-3xl font-extrabold mb-8 text-center text-purple-700">
+    <div className="min-h-screen flex items-center justify-center bg-pink-50 px-4">
+      <div className="bg-white p-10 rounded-2xl shadow-xl w-full max-w-md">
+        <h2 className="text-3xl font-extrabold mb-8 text-center text-pink-700">
           Create Account
         </h2>
         <form className="flex flex-col gap-6" onSubmit={handleSubmit}>
@@ -58,7 +58,7 @@ export default function Register() {
               id="name"
               name="name"
               placeholder="Your full name"
-              className="border-2 border-purple-300 p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-400 focus:border-purple-400 transition-all"
+              className="border-2 border-pink-300 p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-400 focus:border-pink-400 transition-all"
               value={name}
               onChange={(e) => {
                 setName(e.target.value);
@@ -75,7 +75,7 @@ export default function Register() {
               id="email"
               name="email"
               placeholder="you@example.com"
-              className="border-2 border-purple-300 p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-400 focus:border-purple-400 transition-all"
+              className="border-2 border-pink-300 p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-400 focus:border-pink-400 transition-all"
               onChange={(e) => {
                 setEmail(e.target.value);
               }}
@@ -95,7 +95,7 @@ export default function Register() {
               id="password"
               name="password"
               placeholder="********"
-              className="border-2 border-purple-300 p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-400 focus:border-purple-400 transition-all"
+              className="border-2 border-pink-300 p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-400 focus:border-pink-400 transition-all"
               onChange={(e) => {
                 setPassword(e.target.value);
               }}
@@ -115,7 +115,7 @@ export default function Register() {
               id="confirmPassword"
               name="confirmPassword"
               placeholder="********"
-              className="border-2 border-purple-300 p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-400 focus:border-purple-400 transition-all"
+              className="border-2 border-pink-300 p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-400 focus:border-pink-400 transition-all"
               onChange={(e) => {
                 setConfirmPassoword(e.target.value);
               }}
@@ -131,7 +131,7 @@ export default function Register() {
           </label>
           <button
             type="submit"
-            className="bg-gradient-to-r from-purple-600 to-pink-500 text-white py-3 rounded-lg font-bold shadow-lg hover:scale-105 transform transition-all"
+            className="bg-pink-600 text-white py-3 rounded-lg font-bold shadow-md hover:bg-pink-700 transition-all disabled:opacity-50"
             disabled={loading}
           >
             Register
