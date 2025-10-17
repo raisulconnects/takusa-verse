@@ -1,7 +1,26 @@
 "use client";
+
+import { useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
+
 // export default function Post({ author, content, likes }) {
 
 export default function Post({ post }) {
+  const { data } = useSession();
+  const router = useRouter();
+  // console.log(data.user.role);
+
+  const handleDelete = async (postid) => {
+    try {
+      await fetch(`/api/posts/${postid}`, {
+        method: "DELETE",
+      });
+      router.refresh();
+    } catch (e) {
+      console.log(e.message);
+    }
+  };
+
   return (
     <div className="bg-white p-6 rounded-2xl shadow-md flex flex-col gap-4 max-w-2/4 mx-auto mt-5">
       <div className="flex items-center justify-between">
@@ -16,9 +35,16 @@ export default function Post({ post }) {
         <button className="bg-pink-100 text-pink-700 px-3 py-1 w-1/5 rounded-2xl shadow-sm hover:bg-pink-200 transition-all">
           Like
         </button>
-        <button className="bg-red-100 text-pink-700 px-3 py-1 w-1/5 rounded-2xl shadow-sm hover:bg-red-200 transition-all">
-          Delete
-        </button>
+        {data?.user?.role === "admin" && (
+          <button
+            className="bg-red-100 text-pink-700 px-3 py-1 w-1/5 rounded-2xl shadow-sm hover:bg-red-200 transition-all"
+            onClick={() => {
+              handleDelete(post._id);
+            }}
+          >
+            Delete
+          </button>
+        )}
       </div>
     </div>
   );
