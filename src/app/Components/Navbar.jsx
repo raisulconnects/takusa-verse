@@ -7,7 +7,7 @@ import { useRouter } from "next/navigation";
 export default function Navbar() {
   const router = useRouter();
   const { data: session, status } = useSession();
-  console.log("From public Feed Nav -> ", status);
+  // console.log("From public Feed Nav -> ", status);
 
   if (status === "authenticated")
     return (

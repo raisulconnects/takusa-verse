@@ -1,11 +1,14 @@
 "use client";
 
 import { useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 export default function PostBox() {
   const [post, setPost] = useState("");
   const { data: session } = useSession();
+
+  const nextRouter = useRouter();
 
   const handlePost = async () => {
     if (!post.trim()) return;
@@ -20,6 +23,7 @@ export default function PostBox() {
       if (!res.ok) throw new Error("Failed to post");
 
       setPost(""); // clear textarea on success
+      nextRouter.refresh();
     } catch (err) {
       console.error(err.message);
     }

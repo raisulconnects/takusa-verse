@@ -11,7 +11,7 @@ const PostSchema = new mongoose.Schema(
     post: { type: String, required: true },
     status: { type: String, required: true, default: "approved" },
     comments: [{ type: mongoose.Schema.Types.ObjectId, ref: "Comment" }],
-    likes: { type: Number, required: true, default: 0 },
+    likes: [{ type: Number, required: true, default: 0 }],
   },
   {
     timestamps: true,
