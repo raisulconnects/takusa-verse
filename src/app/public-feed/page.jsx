@@ -11,7 +11,7 @@ export default async function PublicFeed() {
   return (
     <div className="">
       <PostBox />
-      {allPosts.map((post) => (
+      {allPosts?.map((post) => (
         <Post key={post._id} post={post} />
       ))}
       {/* <Post author={"Raisul"} content={"this is the post body"} likes={69} /> */}

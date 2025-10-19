@@ -9,11 +9,27 @@ export default function Post({ post }) {
   const { data } = useSession();
   const router = useRouter();
   // console.log(data.user.role);
+  // console.log(data?.user?.id);
 
   const handleDelete = async (postid) => {
     try {
       await fetch(`/api/posts/${postid}`, {
         method: "DELETE",
+      });
+      router.refresh();
+    } catch (e) {
+      console.log(e.message);
+    }
+  };
+
+  const handleLike = async (postid) => {
+    try {
+      await fetch(`/api/posts/${postid}`, {
+        method: "PUT",
+        headers: {
+          "Content-type": "application/json",
+        },
+        body: JSON.stringify({ userId: data.user.id }),
       });
       router.refresh();
     } catch (e) {
@@ -32,7 +48,12 @@ export default function Post({ post }) {
 
       <p className="text-gray-800">{post.post}</p>
       <div className="flex gap-2">
-        <button className="bg-pink-100 text-pink-700 px-3 py-1 w-1/5 rounded-2xl shadow-sm hover:bg-pink-200 transition-all">
+        <button
+          className="bg-pink-100 text-pink-700 px-3 py-1 w-1/5 rounded-2xl shadow-sm hover:bg-pink-200 transition-all"
+          onClick={() => {
+            handleLike(post._id);
+          }}
+        >
           Like
         </button>
         {data?.user?.role === "admin" && (
