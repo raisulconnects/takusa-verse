@@ -11,6 +11,8 @@ export default function Post({ post }) {
   // console.log(data.user.role);
   // console.log(data?.user?.id);
 
+  const postIsLiked = post.likes.includes(data?.user?.id);
+
   const handleDelete = async (postid) => {
     try {
       await fetch(`/api/posts/${postid}`, {
@@ -54,7 +56,7 @@ export default function Post({ post }) {
             handleLike(post._id);
           }}
         >
-          Like
+          {postIsLiked ? "Liked" : "Like"}
         </button>
         {data?.user?.role === "admin" && (
           <button
