@@ -2,6 +2,7 @@
 
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
+import timeAgo from "../../../lib/timeAgo";
 
 // export default function Post({ author, content, likes }) {
 
@@ -39,31 +40,48 @@ export default function Post({ post }) {
     }
   };
 
+  let postDateTime = timeAgo(post.createdAt);
+
   return (
-    <div className="bg-white p-6 rounded-2xl shadow-md flex flex-col gap-4 max-w-2/4 mx-auto mt-5">
-      <div className="flex items-center justify-between">
-        <span className="font-bold text-pink-700">{post.userId.name}</span>
-        <div className="flex items-center gap-2">
-          <span className="text-gray-700">{post.likes.length} Likes</span>
+    <div className="bg-white/90 backdrop-blur-sm border border-pink-100 p-6 rounded-2xl shadow-sm hover:shadow-md transition-all duration-200 max-w-2xl mx-auto mt-6">
+      {/* Header */}
+      <div className="flex items-center justify-between mb-2 gap-1.5">
+        <span className="font-semibold text-pink-700 text-lg tracking-tight ">
+          {post.userId.name}
+        </span>
+        <span className="flex-1  text-pink-400 text-sm tracking-tight ">
+          {postDateTime}
+        </span>
+        <div className="flex items-center gap-2 text-sm text-gray-600">
+          <span className="bg-pink-50 px-3 py-1 rounded-full shadow-inner">
+            👍 {post.likes.length} Likes
+          </span>
         </div>
       </div>
 
-      <p className="text-gray-800">{post.post}</p>
-      <div className="flex gap-2">
+      {/* Post Content */}
+      <p className="text-gray-800 text-base leading-relaxed border-l-4 border-pink-200 pl-3">
+        {post.post}
+      </p>
+
+      {/* Action Buttons */}
+      <div className="flex gap-3 mt-4">
         <button
-          className="bg-pink-100 text-pink-700 px-3 py-1 w-1/5 rounded-2xl shadow-sm hover:bg-pink-200 transition-all"
-          onClick={() => {
-            handleLike(post._id);
-          }}
+          className={`flex-1 py-2 rounded-xl font-medium w-1/5 transition-all duration-200 shadow-sm 
+          ${
+            postIsLiked
+              ? "bg-pink-500 text-white hover:bg-pink-700"
+              : "bg-pink-200 text-pink-700 hover:bg-pink-300"
+          }`}
+          onClick={() => handleLike(post._id)}
         >
           {postIsLiked ? "Liked" : "Like"}
         </button>
+
         {data?.user?.role === "admin" && (
           <button
-            className="bg-red-100 text-pink-700 px-3 py-1 w-1/5 rounded-2xl shadow-sm hover:bg-red-200 transition-all"
-            onClick={() => {
-              handleDelete(post._id);
-            }}
+            className="flex-1 py-2 rounded-xl font-medium bg-red-100 text-red-600 hover:bg-red-200 shadow-sm transition-all duration-200"
+            onClick={() => handleDelete(post._id)}
           >
             Delete
           </button>
