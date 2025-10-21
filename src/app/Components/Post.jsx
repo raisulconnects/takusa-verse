@@ -3,14 +3,19 @@
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import timeAgo from "../../../lib/timeAgo";
+import { useState } from "react";
 
 // export default function Post({ author, content, likes }) {
 
 export default function Post({ post }) {
   const { data } = useSession();
   const router = useRouter();
+  const [isEditing, setIsEditing] = useState(false);
+  const [editedText, setEditedText] = useState(post.post);
   // console.log(data.user.role);
   // console.log(data?.user?.id);
+  // console.log(post?.userId._id === data?.user?.id);
+  // post?.userId ==  data?.user?.id
 
   const postIsLiked = post.likes.includes(data?.user?.id);
 
@@ -40,6 +45,22 @@ export default function Post({ post }) {
     }
   };
 
+  const handleEdit = async function (postid) {
+    try {
+      await fetch(`/api/posts/edit/${postid}`, {
+        method: "PUT",
+        headers: {
+          "Content-type": "application/json",
+        },
+        body: JSON.stringify({ updatedText: editedText }),
+      });
+
+      router.refresh();
+    } catch (e) {
+      console.log(e.message);
+    }
+  };
+
   let postDateTime = timeAgo(post.createdAt);
 
   return (
@@ -60,9 +81,18 @@ export default function Post({ post }) {
       </div>
 
       {/* Post Content */}
-      <p className="text-gray-800 text-base leading-relaxed border-l-4 border-pink-200 pl-3">
-        {post.post}
-      </p>
+      {isEditing ? (
+        <textarea
+          value={editedText}
+          onChange={(e) => {
+            setEditedText(e.target.value);
+          }}
+        />
+      ) : (
+        <p className="text-gray-800 text-base leading-relaxed border-l-4 border-pink-200 pl-3">
+          {post.post}
+        </p>
+      )}
 
       {/* Action Buttons */}
       <div className="flex gap-3 mt-4">
@@ -77,13 +107,50 @@ export default function Post({ post }) {
         >
           {postIsLiked ? "Liked" : "Like"}
         </button>
+        {isEditing ? (
+          <button
+            className="flex-1 py-2 rounded-xl font-medium bg-red-100 text-red-600 hover:bg-red-200 shadow-sm transition-all duration-200"
+            onClick={() => {
+              if (editedText === post.post) {
+                setIsEditing(false);
+                return;
+              }
+              handleEdit(post._id);
+              setIsEditing(false);
+            }}
+          >
+            Save
+          </button>
+        ) : post?.userId._id === data?.user?.id ? (
+          <button
+            className="flex-1 py-2 rounded-xl font-medium bg-red-100 text-red-600 hover:bg-red-200 shadow-sm transition-all duration-200"
+            onClick={() => {
+              setIsEditing(true);
+            }}
+          >
+            Edit
+          </button>
+        ) : (
+          ""
+        )}
 
-        {data?.user?.role === "admin" && (
+        {/* This is for particular user's own post deleting */}
+        {post?.userId._id === data?.user?.id && (
           <button
             className="flex-1 py-2 rounded-xl font-medium bg-red-100 text-red-600 hover:bg-red-200 shadow-sm transition-all duration-200"
             onClick={() => handleDelete(post._id)}
           >
             Delete
+          </button>
+        )}
+
+        {/* THis is for admin delete so admin can delete any post */}
+        {data?.user?.role === "admin" && (
+          <button
+            className="flex-1 py-2 rounded-xl font-medium bg-red-100 text-red-600 hover:bg-red-200 shadow-sm transition-all duration-200"
+            onClick={() => handleDelete(post._id)}
+          >
+            ADMIN Delete
           </button>
         )}
       </div>
