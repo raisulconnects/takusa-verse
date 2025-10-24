@@ -4,6 +4,7 @@ import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import timeAgo from "../../../lib/timeAgo";
 import { useState } from "react";
+import CommentSection from "./CommentSection";
 
 // export default function Post({ author, content, likes }) {
 
@@ -84,9 +85,9 @@ export default function Post({ post }) {
       {isEditing ? (
         <textarea
           value={editedText}
-          onChange={(e) => {
-            setEditedText(e.target.value);
-          }}
+          onChange={(e) => setEditedText(e.target.value)}
+          className="w-full p-3 border border-pink-200 rounded-2xl bg-pink-50/60 text-gray-800 focus:outline-none focus:ring-2 focus:ring-pink-300 focus:border-pink-400 shadow-inner transition-all duration-200 resize-none"
+          rows={3}
         />
       ) : (
         <p className="text-gray-800 text-base leading-relaxed border-l-4 border-pink-200 pl-3">
@@ -134,15 +135,16 @@ export default function Post({ post }) {
           ""
         )}
 
-        {/* This is for particular user's own post deleting */}
-        {post?.userId._id === data?.user?.id && (
-          <button
-            className="flex-1 py-2 rounded-xl font-medium bg-red-100 text-red-600 hover:bg-red-200 shadow-sm transition-all duration-200"
-            onClick={() => handleDelete(post._id)}
-          >
-            Delete
-          </button>
-        )}
+        {/* This is for particular user's own post deleting also we are adding a guard so that admin dont get to see 2 buttons for their own post */}
+        {post?.userId._id === data?.user?.id &&
+          data?.user?.role !== "admin" && (
+            <button
+              className="flex-1 py-2 rounded-xl font-medium bg-red-100 text-red-600 hover:bg-red-200 shadow-sm transition-all duration-200"
+              onClick={() => handleDelete(post._id)}
+            >
+              Delete
+            </button>
+          )}
 
         {/* THis is for admin delete so admin can delete any post */}
         {data?.user?.role === "admin" && (
@@ -150,10 +152,11 @@ export default function Post({ post }) {
             className="flex-1 py-2 rounded-xl font-medium bg-red-100 text-red-600 hover:bg-red-200 shadow-sm transition-all duration-200"
             onClick={() => handleDelete(post._id)}
           >
-            ADMIN Delete
+            Admin Delete
           </button>
         )}
       </div>
+      <CommentSection postId={post._id} />
     </div>
   );
 }
