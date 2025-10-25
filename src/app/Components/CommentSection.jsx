@@ -1,8 +1,9 @@
 "use client";
 
-import { useState } from "react";
-import connectDB from "../../../lib/connectDB";
+import { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
+import Comment from "@/app/Components/Comment";
+import { useRouter } from "next/navigation";
 
 // Eklhane postId tene ana hoise Post Component theke karon amader jana lagbe kon Post er comment section show korba by fetcing that post objhect from mongodb's comments array
 
@@ -10,7 +11,22 @@ import { useSession } from "next-auth/react";
 
 export default function CommentSection({ commentPresent, postId }) {
   const [inputComment, setInputComment] = useState("");
+  const [comments, setComments] = useState([]);
   const { data: session } = useSession();
+  const router = useRouter();
+
+  useEffect(() => {
+    const fetchComment = async () => {
+      try {
+        let res = await fetch(`/api/comments?postId=${postId}`);
+        let data = await res.json();
+        setComments(data.data);
+      } catch (e) {
+        console.log("--> Error:", e.message);
+      }
+    };
+    fetchComment();
+  }, [postId]);
 
   const handleCommentPost = async () => {
     if (inputComment.trim() === "") return;
@@ -27,13 +43,18 @@ export default function CommentSection({ commentPresent, postId }) {
           postId: postId,
         }),
       });
+
+      const res = await fetch(`/api/comments?postId=${postId}`);
+      const data = await res.json();
+      setComments(data.data);
+
       setInputComment("");
     } catch (e) {
-      console.log(e.message);
+      console.log(" --> Error:", e.message);
     }
   };
 
-  if (commentPresent == false) {
+  if (comments.length === 0) {
     return (
       <div className="mt-4 border-t border-gray-200 pt-3">
         <div className="flex items-center gap-3 mb-3 bg-gray-50 rounded-2xl px-3 py-2 shadow-inner">
@@ -81,23 +102,9 @@ export default function CommentSection({ commentPresent, postId }) {
         </button>
       </div>
 
-      {/* comments list */}
-      <div className="flex flex-col gap-2">
-        {/* comment item */}
-        <div className="bg-white border border-gray-100 rounded-2xl px-4 py-2 shadow-sm hover:shadow-md transition">
-          <div className="flex items-center justify-between">
-            <span className="font-semibold text-pink-700 text-sm">
-              John Doe
-            </span>
-            <span className="text-xs text-gray-400">Oct 23</span>
-          </div>
-          <p className="text-sm text-gray-700 mt-1">This looks awesome 🔥</p>
-        </div>
-
-        {/* <p className="text-gray-400 text-sm text-center py-2">
-          No comments yet. Be the first!
-        </p> */}
-      </div>
+      {comments?.map((cmnt) => {
+        return <Comment key={cmnt._id} comment={cmnt} />;
+      })}
     </div>
   );
 }

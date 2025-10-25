@@ -32,3 +32,25 @@ export async function POST(req, params) {
     return NextResponse.json({ message: "Error Occured", error: e.message });
   }
 }
+
+export async function GET(req, params) {
+  const { searchParams } = new URL(req.url);
+  const postId = searchParams.get("postId");
+
+  console.log("--> Comment GET API Being HIT!");
+
+  try {
+    await connectDB();
+
+    const allComments = await Comment.find({
+      postId,
+    })
+      .populate("userId", "name role")
+      .sort({ createdAt: -1 });
+
+    return NextResponse.json({ data: allComments });
+  } catch (e) {
+    console.log(e.message);
+    return NextResponse.json({ message: "Something went wrong" });
+  }
+}
