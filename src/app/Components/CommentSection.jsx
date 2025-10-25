@@ -6,7 +6,9 @@ import { useSession } from "next-auth/react";
 
 // Eklhane postId tene ana hoise Post Component theke karon amader jana lagbe kon Post er comment section show korba by fetcing that post objhect from mongodb's comments array
 
-export default function CommentSection({ postId }) {
+// Comment present diye basically Post compononent theke check kore agei boltesi adou post er comment ase kina, cause UI ektu changed
+
+export default function CommentSection({ commentPresent, postId }) {
   const [inputComment, setInputComment] = useState("");
   const { data: session } = useSession();
 
@@ -25,10 +27,38 @@ export default function CommentSection({ postId }) {
           postId: postId,
         }),
       });
+      setInputComment("");
     } catch (e) {
       console.log(e.message);
     }
   };
+
+  if (commentPresent == false) {
+    return (
+      <div className="mt-4 border-t border-gray-200 pt-3">
+        <div className="flex items-center gap-3 mb-3 bg-gray-50 rounded-2xl px-3 py-2 shadow-inner">
+          <input
+            value={inputComment}
+            onChange={(e) => {
+              setInputComment(e.target.value);
+            }}
+            type="text"
+            placeholder="Write a comment..."
+            className="flex-1 bg-transparent outline-none text-sm placeholder-gray-400"
+          />
+          <button
+            className="bg-pink-600 text-white text-sm px-4 py-1.5 rounded-xl hover:bg-pink-700 transition"
+            onClick={handleCommentPost}
+          >
+            Post
+          </button>
+        </div>
+        <p className="text-gray-400 text-sm text-center py-2">
+          No comments yet. Be the first!
+        </p>
+      </div>
+    );
+  }
 
   return (
     <div className="mt-4 border-t border-gray-200 pt-3">
@@ -64,17 +94,6 @@ export default function CommentSection({ postId }) {
           <p className="text-sm text-gray-700 mt-1">This looks awesome 🔥</p>
         </div>
 
-        {/* <div className="bg-white border border-gray-100 rounded-2xl px-4 py-2 shadow-sm hover:shadow-md transition">
-          <div className="flex items-center justify-between">
-            <span className="font-semibold text-pink-700 text-sm">Alice</span>
-            <span className="text-xs text-gray-400">Oct 22</span>
-          </div>
-          <p className="text-sm text-gray-700 mt-1">
-            Love the design! Keep it up 💪
-          </p>
-        </div> */}
-
-        {/* no comments message (if empty) */}
         {/* <p className="text-gray-400 text-sm text-center py-2">
           No comments yet. Be the first!
         </p> */}

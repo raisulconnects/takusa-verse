@@ -61,7 +61,6 @@ export default function Post({ post }) {
       console.log(e.message);
     }
   };
-
   let postDateTime = timeAgo(post.createdAt);
 
   return (
@@ -80,7 +79,6 @@ export default function Post({ post }) {
           </span>
         </div>
       </div>
-
       {/* Post Content */}
       {isEditing ? (
         <textarea
@@ -94,7 +92,6 @@ export default function Post({ post }) {
           {post.post}
         </p>
       )}
-
       {/* Action Buttons */}
       <div className="flex gap-3 mt-4">
         <button
@@ -156,7 +153,12 @@ export default function Post({ post }) {
           </button>
         )}
       </div>
-      <CommentSection postId={post._id} />
+
+      {post.comments.length > 0 ? (
+        <CommentSection commentPresent={true} postId={post._id} />
+      ) : (
+        <CommentSection commentPresent={false} postId={post._id} />
+      )}
     </div>
   );
 }
