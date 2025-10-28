@@ -7,6 +7,7 @@ import { useState } from "react";
 export default function PostBox() {
   const [post, setPost] = useState("");
   const { data: session } = useSession();
+  const [loading, setLoading] = useState(false);
 
   const nextRouter = useRouter();
 
@@ -14,6 +15,7 @@ export default function PostBox() {
     if (!post.trim()) return;
 
     try {
+      setLoading(true);
       const res = await fetch("/api/posts", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -23,9 +25,11 @@ export default function PostBox() {
       if (!res.ok) throw new Error("Failed to post");
 
       setPost(""); // clear textarea on success
+      setLoading(false);
       nextRouter.refresh();
     } catch (err) {
       console.error(err.message);
+      setLoading(false);
     }
   };
 
@@ -41,7 +45,7 @@ export default function PostBox() {
       <div className="flex justify-end mt-4">
         <button
           className="bg-pink-600 text-white px-6 py-2 rounded-2xl font-bold shadow-md hover:bg-pink-700 transition-all disabled:opacity-50"
-          disabled={!post.trim()}
+          disabled={!post.trim() || loading}
           onClick={handlePost}
         >
           Post

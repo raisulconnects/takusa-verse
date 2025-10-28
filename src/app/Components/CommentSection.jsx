@@ -12,6 +12,7 @@ import { useRouter } from "next/navigation";
 export default function CommentSection({ commentPresent, postId }) {
   const [inputComment, setInputComment] = useState("");
   const [comments, setComments] = useState([]);
+  const [loading, setLoading] = useState(false);
   const { data: session } = useSession();
   const router = useRouter();
 
@@ -32,6 +33,7 @@ export default function CommentSection({ commentPresent, postId }) {
     if (inputComment.trim() === "") return;
 
     try {
+      setLoading(true);
       await fetch("/api/comments", {
         method: "POST",
         headers: {
@@ -49,8 +51,10 @@ export default function CommentSection({ commentPresent, postId }) {
       setComments(data.data);
 
       setInputComment("");
+      setLoading(false);
     } catch (e) {
       console.log(" --> Error:", e.message);
+      setLoading(false);
     }
   };
 
@@ -70,6 +74,7 @@ export default function CommentSection({ commentPresent, postId }) {
           <button
             className="bg-pink-600 text-white text-sm px-4 py-1.5 rounded-xl hover:bg-pink-700 transition"
             onClick={handleCommentPost}
+            disabled={loading}
           >
             Post
           </button>
@@ -97,13 +102,24 @@ export default function CommentSection({ commentPresent, postId }) {
         <button
           className="bg-pink-600 text-white text-sm px-4 py-1.5 rounded-xl hover:bg-pink-700 transition"
           onClick={handleCommentPost}
+          disabled={loading}
         >
           Post
         </button>
       </div>
 
       {comments?.map((cmnt) => {
-        return <Comment key={cmnt._id} comment={cmnt} />;
+        return (
+          <Comment
+            key={cmnt._id}
+            comment={cmnt}
+            commentsUpdater={async () => {
+              let res = await fetch(`/api/comments?postId=${postId}`);
+              let data = await res.json();
+              setComments(data.data);
+            }}
+          />
+        );
       })}
     </div>
   );
