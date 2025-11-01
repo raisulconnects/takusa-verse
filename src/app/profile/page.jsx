@@ -1,38 +1,35 @@
 "use client";
 
 import { useSession } from "next-auth/react";
-import { useEffect, useState } from "react";
+import useSWR from "swr";
 import timeAgo from "../../../lib/timeAgo";
 
 export default function Profile() {
   const { data: session } = useSession();
-  const [posts, setPosts] = useState([]);
-  const [loading, setLoading] = useState(true);
 
   const user = session?.user || {
     name: "John Doe",
     email: "john@example.com",
     role: "User",
   };
-  // console.log(session?.user?.id);
 
-  useEffect(() => {
-    if (session?.user?.email) {
-      const fetchUserPosts = async () => {
-        try {
-          const res = await fetch(`/api/profilepost/${session?.user?.id}`);
-          const data = await res.json();
-          console.log("--> Data: ", data);
-          setPosts(data.userPosts);
-        } catch (e) {
-          console.error("Error fetching user posts:", e);
-        } finally {
-          setLoading(false);
-        }
-      };
-      fetchUserPosts();
+  const shouldFetch = !!session?.user?.id;
+
+  const fetcher = (url) => fetch(url).then((res) => res.json());
+
+  const { data, isLoading, error } = useSWR(
+    shouldFetch ? `/api/profilepost/${session.user.id}` : null,
+    fetcher,
+    {
+      revalidateOnFocus: false,
+      revalidateOnReconnect: false,
+      revalidateIfStale: false,
+      keepPreviousData: true, // ✅ keep cached posts when navigating away/back
     }
-  }, [session]);
+  );
+
+  const posts = data?.userPosts || [];
+  console.log(posts);
 
   return (
     <div className="min-h-screen bg-pink-50 flex flex-col items-center px-4 py-10">
@@ -56,14 +53,15 @@ export default function Profile() {
         </div>
       </div>
 
-      {/* User Posts Section */}
       <div className="bg-white p-8 rounded-2xl shadow-md w-full max-w-3xl">
         <h2 className="text-2xl font-bold text-pink-700 mb-6 text-center">
           Your Posts
         </h2>
 
-        {loading ? (
+        {isLoading ? (
           <p className="text-gray-500 text-center">Loading your posts...</p>
+        ) : error ? (
+          <p className="text-red-500 text-center">Error loading posts.</p>
         ) : posts.length === 0 ? (
           <p className="text-gray-500 text-center">
             You haven’t created any posts yet.
@@ -78,15 +76,11 @@ export default function Profile() {
                 <p className="text-gray-800 mb-2">{post.post}</p>
                 <div className="flex justify-between items-center text-sm text-gray-500">
                   <span>{timeAgo(post.createdAt)}</span>
-                  {post.comments.length === 0 ? (
-                    <span className="flex-1 mx-5 text-pink-500">
-                      No Comments Yet
-                    </span>
-                  ) : (
-                    <span className="flex-1 mx-5 text-pink-600">
-                      {post.comments.length} comment(s)
-                    </span>
-                  )}
+                  <span className="flex-1 mx-5 text-pink-600">
+                    {post.comments.length
+                      ? `${post.comments.length} comment(s)`
+                      : "No Comments Yet"}
+                  </span>
                   <span
                     className={`${
                       post.status === "approved"
