@@ -24,7 +24,7 @@ export default function Profile() {
       revalidateOnFocus: false,
       revalidateOnReconnect: false,
       revalidateIfStale: false,
-      keepPreviousData: true, // ✅ keep cached posts when navigating away/back
+      keepPreviousData: true,
     }
   );
 
