@@ -36,7 +36,7 @@ A modern, full-stack blog platform built with **Next.js 14**, **MongoDB**, and *
 
 ## 📁 Folder Structure
 
-````bash
+```bash
 ├── app/
 │ ├── api/
 │ │ ├── posts/ → CRUD endpoints
@@ -60,6 +60,7 @@ A modern, full-stack blog platform built with **Next.js 14**, **MongoDB**, and *
 ├── Post.js
 └── Comment.js
 ```
+
 ---
 
 ## 🔒 Route Protection
@@ -77,6 +78,7 @@ It checks for valid session tokens and guards restricted paths.
    git clone https://github.com/yourusername/takusa-blog.git
    cd takusa-blog
    npm install
+   ```
 
 ````
 
@@ -114,3 +116,4 @@ It checks for valid session tokens and guards restricted paths.
 ❤️ Likes system
 
 📱 Responsive dark mode
+````
