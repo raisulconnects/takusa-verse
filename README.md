@@ -80,7 +80,7 @@ It checks for valid session tokens and guards restricted paths.
    npm install
    ```
 
-````
+---
 
 2. **Setup Enviorment Variables**
 
@@ -90,6 +90,8 @@ It checks for valid session tokens and guards restricted paths.
    NEXTAUTH_URL=http://localhost:3000
 
    ```
+
+---
 
 3. **Run Dev Server**
    ```bash
@@ -116,4 +118,5 @@ It checks for valid session tokens and guards restricted paths.
 ❤️ Likes system
 
 📱 Responsive dark mode
-````
+
+---
