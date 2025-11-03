@@ -1,36 +1,117 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# 📰 Takusa Blog
 
-## Getting Started
+A modern, full-stack blog platform built with **Next.js 14**, **MongoDB**, and **NextAuth**, featuring authentication, post management, commenting, and route protection — all styled with Tailwind for a sleek, minimal look.
 
-First, run the development server:
+---
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+## 🚀 Tech Stack
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+**Frontend**
 
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
+- ⚡ Next.js 14 (App Router)
+- 🎨 Tailwind CSS
+- 🧭 Next Navigation (Client + Server components mix)
+- 🔁 SWR for efficient data fetching
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+**Backend**
 
-## Learn More
+- 🧩 Next.js API Routes / Server Actions
+- 🗄️ MongoDB + Mongoose ORM
+- 🔐 NextAuth.js for Authentication
 
-To learn more about Next.js, take a look at the following resources:
+---
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## ✨ Features
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+- 👤 **User Authentication** (Signup, Login, Logout)
+- ✍️ **Create, Edit, Delete Posts**
+- 💬 **Comment System** with instant refresh
+- 🚧 **Protected Routes** (via `middleware.js`)
+- ⏱️ **Time-ago formatting** for post & comment timestamps
+- 🧭 **Dynamic Routing** for posts and users
+- 🧠 _(Upcoming)_: **AI Auto-Summarization** and **Smart Tagging**
+- ⚙️ **Environment-aware Base URL** (for Vercel deployment)
 
-## Deploy on Vercel
+---
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## 📁 Folder Structure
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+├── app/
+│ ├── api/
+│ │ ├── posts/ → CRUD endpoints
+│ │ ├── comments/ → Comment API
+│ │ └── auth/ → NextAuth routes
+│ ├── (auth)/
+│ │ ├── login/
+│ │ └── register/
+│ ├── dashboard/
+│ ├── profile/
+│ └── page.js → Home page
+│
+├── components/ → UI components
+├── lib/
+│ ├── dbConnect.js → Mongo connection
+│ ├── timeAgo.js → Date formatting helper
+│ └── getBaseUrl.js → Handles local/prod URL
+├── middleware.js → Route protection logic
+└── models/
+├── User.js
+├── Post.js
+└── Comment.js
+
+---
+
+## 🔒 Route Protection
+
+Implemented via **`middleware.js`**, which runs on every request.  
+It checks for valid session tokens and guards restricted paths.
+
+---
+
+## ⚡ Running Locally
+
+1. **Clone the repository**
+
+   ```bash
+   git clone https://github.com/yourusername/takusa-blog.git
+   cd takusa-blog
+   npm install
+
+   ```
+
+2. **Setup Enviorment Variables**
+
+   ```bash
+   MONGODB_URI=your_mongodb_connection_string
+   NEXTAUTH_SECRET=your_secret_key
+   NEXTAUTH_URL=http://localhost:3000
+
+   ```
+
+3. **Run Dev Server**
+   ```bash
+   npm run dev
+   ```
+
+---
+
+## 📦 Deployment
+
+    Ready for seamless deployment on Vercel. Add the same environment variables
+    in Vercel Project Settings → Environment Variables before deploying.
+
+---
+
+## 🧠 Upcoming Features
+
+🤖 AI-generated post summaries
+
+🏷️ Automatic tag suggestions
+
+📊 Dashboard analytics
+
+❤️ Likes system
+
+📱 Responsive dark mode
+
+---
