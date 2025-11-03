@@ -36,6 +36,7 @@ A modern, full-stack blog platform built with **Next.js 14**, **MongoDB**, and *
 
 ## 📁 Folder Structure
 
+````bash
 ├── app/
 │ ├── api/
 │ │ ├── posts/ → CRUD endpoints
@@ -58,12 +59,12 @@ A modern, full-stack blog platform built with **Next.js 14**, **MongoDB**, and *
 ├── User.js
 ├── Post.js
 └── Comment.js
-
+```
 ---
 
 ## 🔒 Route Protection
 
-Implemented via **`middleware.js`**, which runs on every request.  
+Implemented via **`middleware.js`**, which runs on every request.
 It checks for valid session tokens and guards restricted paths.
 
 ---
@@ -77,7 +78,7 @@ It checks for valid session tokens and guards restricted paths.
    cd takusa-blog
    npm install
 
-   ```
+````
 
 2. **Setup Enviorment Variables**
 
@@ -113,5 +114,3 @@ It checks for valid session tokens and guards restricted paths.
 ❤️ Likes system
 
 📱 Responsive dark mode
-
----
