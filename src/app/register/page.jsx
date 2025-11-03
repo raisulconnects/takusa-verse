@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { getBaseUrl } from "../../../lib/getBaseUrl";
 
 export default function Register() {
   const router = useRouter();
@@ -19,7 +20,7 @@ export default function Register() {
     setLoading(true);
     if (password === confirmPassword) {
       try {
-        await fetch("http://localhost:3000/api/register", {
+        await fetch(`${getBaseUrl()}/api/register`, {
           method: "POST",
           headers: {
             "content-type": "application/json",

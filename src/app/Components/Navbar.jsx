@@ -3,6 +3,7 @@
 import { signOut, useSession } from "next-auth/react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { getBaseUrl } from "../../../lib/getBaseUrl";
 
 export default function Navbar() {
   const router = useRouter();
@@ -40,7 +41,7 @@ export default function Navbar() {
           <button
             className="px-4 py-2 bg-pink-600 text-white rounded-2xl shadow-md hover:bg-pink-700 transition-all"
             onClick={() => {
-              signOut({ callbackUrl: "/" });
+              signOut({ callbackUrl: `${getBaseUrl()}/` });
             }}
           >
             Logout
