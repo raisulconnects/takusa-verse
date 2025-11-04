@@ -8,6 +8,7 @@ const PostSchema = new mongoose.Schema(
       required: true,
       ref: "User",
     },
+    title: { type: String, required: false, default: "" },
     post: { type: String, required: true },
     status: { type: String, required: true, default: "approved" },
     comments: [{ type: mongoose.Schema.Types.ObjectId, ref: "Comment" }],

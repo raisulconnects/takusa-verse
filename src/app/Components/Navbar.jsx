@@ -8,29 +8,28 @@ import { getBaseUrl } from "../../../lib/getBaseUrl";
 export default function Navbar() {
   const router = useRouter();
   const { data: session, status } = useSession();
-  // console.log("From public Feed Nav -> ", status);
 
   if (status === "authenticated")
     return (
-      <nav className="bg-white shadow-md px-6 py-4 flex items-center justify-between">
+      // ✅ Made sticky and responsive container
+      <nav className="sticky top-0 z-50 bg-white shadow-md px-6 py-4 flex flex-wrap items-center justify-between gap-3">
         {/* Left */}
         <Link href={"/public-feed"}>
-          {" "}
-          <div className="text-2xl font-extrabold text-pink-700">
+          <div className="text-2xl font-extrabold text-pink-700 whitespace-nowrap">
             Takusa Blog
           </div>
         </Link>
 
         {/* Center */}
-        <div className="flex space-x-4">
+        <div className="flex flex-wrap justify-center gap-3 sm:gap-4">
           <Link href={"/public-feed"}>
-            <button className="px-4 py-2 bg-pink-100 text-pink-700 rounded-2xl shadow-sm hover:bg-pink-200 transition-all">
+            <button className="px-4 py-2 bg-pink-100 text-pink-700 rounded-2xl shadow-sm hover:bg-pink-200 transition-all w-full sm:w-auto">
               Post Feed
             </button>
           </Link>
 
           <Link href={"/profile"}>
-            <button className="px-4 py-2 bg-pink-100 text-pink-700 rounded-2xl shadow-sm hover:bg-pink-200 transition-all">
+            <button className="px-4 py-2 bg-pink-100 text-pink-700 rounded-2xl shadow-sm hover:bg-pink-200 transition-all w-full sm:w-auto">
               Profile
             </button>
           </Link>
@@ -39,7 +38,7 @@ export default function Navbar() {
         {/* Right */}
         <div>
           <button
-            className="px-4 py-2 bg-pink-600 text-white rounded-2xl shadow-md hover:bg-pink-700 transition-all"
+            className="px-4 py-2 bg-pink-600 text-white rounded-2xl shadow-md hover:bg-pink-700 transition-all w-full sm:w-auto"
             onClick={() => {
               signOut({ callbackUrl: `${getBaseUrl()}/` });
             }}

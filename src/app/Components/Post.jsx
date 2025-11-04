@@ -66,11 +66,11 @@ export default function Post({ post }) {
   return (
     <div className="bg-white/90 backdrop-blur-sm border border-pink-100 p-6 rounded-2xl shadow-sm hover:shadow-md transition-all duration-200 max-w-2xl mx-auto mt-6">
       {/* Header */}
-      <div className="flex items-center justify-between mb-2 gap-1.5">
-        <span className="font-semibold text-pink-700 text-lg tracking-tight ">
+      <div className="flex flex-wrap items-center justify-between mb-2 gap-1.5">
+        <span className="font-semibold text-pink-700 text-lg tracking-tight">
           {post.userId.name}
         </span>
-        <span className="flex-1  text-pink-400 text-sm tracking-tight ">
+        <span className="flex-1 text-pink-400 text-sm tracking-tight text-right sm:text-left">
           {postDateTime}
         </span>
         <div className="flex items-center gap-2 text-sm text-gray-600">
@@ -79,6 +79,13 @@ export default function Post({ post }) {
           </span>
         </div>
       </div>
+
+      {post.title && (
+        <h2 className="text-xl sm:text-2xl font-bold text-pink-800 mb-3 break-words text-center sm:text-left">
+          {post.title}
+        </h2>
+      )}
+
       {/* Post Content */}
       {isEditing ? (
         <textarea
@@ -92,8 +99,9 @@ export default function Post({ post }) {
           {post.post}
         </p>
       )}
+
       {/* Action Buttons */}
-      <div className="flex gap-3 mt-4">
+      <div className="flex flex-wrap gap-3 mt-4">
         <button
           className={`flex-1 py-2 rounded-xl font-medium w-1/5 transition-all duration-200 shadow-sm 
           ${
@@ -105,6 +113,7 @@ export default function Post({ post }) {
         >
           {postIsLiked ? "Liked" : "Like"}
         </button>
+
         {isEditing ? (
           <button
             className="flex-1 py-2 rounded-xl font-medium bg-red-100 text-red-600 hover:bg-red-200 shadow-sm transition-all duration-200"
@@ -132,7 +141,7 @@ export default function Post({ post }) {
           ""
         )}
 
-        {/* This is for particular user's own post deleting also we are adding a guard so that admin dont get to see 2 buttons for their own post */}
+        {/* User Delete Button */}
         {post?.userId._id === data?.user?.id &&
           data?.user?.role !== "admin" && (
             <button
@@ -143,7 +152,7 @@ export default function Post({ post }) {
             </button>
           )}
 
-        {/* THis is for admin delete so admin can delete any post */}
+        {/* Admin Delete Button */}
         {data?.user?.role === "admin" && (
           <button
             className="flex-1 py-2 rounded-xl font-medium bg-red-100 text-red-600 hover:bg-red-200 shadow-sm transition-all duration-200"
