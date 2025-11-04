@@ -33,6 +33,12 @@ export default function Navbar() {
               Profile
             </button>
           </Link>
+
+          <Link href={"/about"}>
+            <button className="px-4 py-2 bg-pink-100 text-pink-700 rounded-2xl shadow-sm hover:bg-pink-200 transition-all w-full sm:w-auto">
+              About Us
+            </button>
+          </Link>
         </div>
 
         {/* Right */}
