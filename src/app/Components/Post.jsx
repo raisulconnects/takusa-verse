@@ -63,6 +63,8 @@ export default function Post({ post }) {
   };
   let postDateTime = timeAgo(post.createdAt);
 
+  // console.log(post);
+
   return (
     <div className="bg-white/90 backdrop-blur-sm border border-pink-100 p-6 rounded-2xl shadow-sm hover:shadow-md transition-all duration-200 max-w-2xl mx-auto mt-6">
       {/* Header */}
