@@ -28,35 +28,31 @@ export async function DELETE(req, { params }) {
 }
 
 export async function PUT(req, { params }) {
-  const { id } = await params;
-  const { userId } = await req.json();
-
   try {
-    await connectDB();
+    const { id } = params;
+    const { userId } = await req.json();
 
-    const post = await Post.findById(id);
+    await connectDB(); // ensure persistent connection in lib
 
-    if (!post) throw new Error("Post not Found!");
-
-    if (post.likes.includes(userId)) {
-      await Post.findByIdAndUpdate(
-        id,
+    // Toggle like in one atomic operation
+    const updatedPost =
+      (await Post.findOneAndUpdate(
+        { _id: id, likes: { $in: [userId] } },
         { $pull: { likes: userId } },
         { new: true }
-      );
-    } else {
-      await Post.findByIdAndUpdate(
+      )) ||
+      (await Post.findByIdAndUpdate(
         id,
-        { $push: { likes: userId } },
+        { $addToSet: { likes: userId } },
         { new: true }
-      );
-    }
-    // console.log("Post Got Liked!");
-    // console.log("User ID --> ", userId);
+      ));
 
-    return NextResponse.json({ message: "Like Operation Done Successfully!" });
-  } catch (e) {
-    console.error(e.message);
-    return NextResponse.json({ message: e.message, status: 500 });
+    return NextResponse.json({
+      message: "Like toggled successfully",
+      likesCount: updatedPost.likes.length,
+    });
+  } catch (error) {
+    console.error("Error in like toggle:", error);
+    return NextResponse.json({ message: error.message }, { status: 500 });
   }
 }
