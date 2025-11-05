@@ -29,7 +29,7 @@ export async function DELETE(req, { params }) {
 
 export async function PUT(req, { params }) {
   try {
-    const { id } = params;
+    const { id } = await params;
     const { userId } = await req.json();
 
     await connectDB(); // ensure persistent connection in lib

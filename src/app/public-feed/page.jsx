@@ -1,11 +1,11 @@
+import { getAllPosts } from "../../../lib/getAllPosts";
 import Post from "../Components/Post";
 import PostBox from "../Components/PostBox";
 
+export const revalidate = 60;
+
 export default async function PublicFeed() {
-  const res = await fetch("http://localhost:3000/api/posts", {
-    next: { tags: ["allPosts"] },
-  });
-  const allPosts = await res.json();
+  const allPosts = await getAllPosts();
   // console.log(allPosts);
 
   return (
@@ -14,8 +14,6 @@ export default async function PublicFeed() {
       {allPosts?.map((post) => (
         <Post key={post._id} post={post} />
       ))}
-      {/* <Post author={"Raisul"} content={"this is the post body"} likes={69} /> */}
-      {/* <Post author={"Tanna"} content={"this is the second body"} likes={120} /> */}
     </div>
   );
 }
