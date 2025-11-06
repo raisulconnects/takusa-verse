@@ -70,14 +70,14 @@ export default function Post({ post }) {
       {/* Header */}
       <div className="flex flex-wrap items-center justify-between mb-2 gap-1.5">
         <span className="font-semibold text-pink-700 text-lg tracking-tight">
-          {post.userId.name}
+          {post.user.name}
         </span>
         <span className="flex-1 text-pink-400 text-sm tracking-tight text-right sm:text-left">
           {postDateTime}
         </span>
         <div className="flex items-center gap-2 text-sm text-gray-600">
           <span className="bg-pink-50 px-3 py-1 rounded-full shadow-inner">
-            👍 {post?.likes?.length} Likes
+            👍 {post?.likes?.length || 0} Likes
           </span>
         </div>
       </div>
@@ -130,7 +130,7 @@ export default function Post({ post }) {
           >
             Save
           </button>
-        ) : post?.userId._id === data?.user?.id ? (
+        ) : post?.user._id === data?.user?.id ? (
           <button
             className="flex-1 py-2 rounded-xl font-medium bg-red-100 text-red-600 hover:bg-red-200 shadow-sm transition-all duration-200"
             onClick={() => {
@@ -144,15 +144,14 @@ export default function Post({ post }) {
         )}
 
         {/* User Delete Button */}
-        {post?.userId._id === data?.user?.id &&
-          data?.user?.role !== "admin" && (
-            <button
-              className="flex-1 py-2 rounded-xl font-medium bg-red-100 text-red-600 hover:bg-red-200 shadow-sm transition-all duration-200"
-              onClick={() => handleDelete(post._id)}
-            >
-              Delete
-            </button>
-          )}
+        {post?.user._id === data?.user?.id && data?.user?.role !== "admin" && (
+          <button
+            className="flex-1 py-2 rounded-xl font-medium bg-red-100 text-red-600 hover:bg-red-200 shadow-sm transition-all duration-200"
+            onClick={() => handleDelete(post._id)}
+          >
+            Delete
+          </button>
+        )}
 
         {/* Admin Delete Button */}
         {data?.user?.role === "admin" && (

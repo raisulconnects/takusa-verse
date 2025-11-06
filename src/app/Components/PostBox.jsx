@@ -24,7 +24,7 @@ export default function PostBox() {
         body: JSON.stringify({
           post,
           title: showTitle ? title : "",
-          userId: session.user.id,
+          user: session.user.id,
           comments: [],
         }),
       });

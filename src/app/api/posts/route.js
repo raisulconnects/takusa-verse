@@ -9,7 +9,7 @@ export async function POST(DATA) {
   try {
     await connectDB();
 
-    if (!data.post || !data.userId) {
+    if (!data.post || !data.user) {
       return NextResponse.json(
         { error: "Missing required fields" },
         { status: 400 }

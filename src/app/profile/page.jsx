@@ -29,7 +29,6 @@ export default function Profile() {
   );
 
   const posts = data?.userPosts || [];
-  console.log(posts);
 
   return (
     <div className="min-h-screen bg-pink-50 flex flex-col items-center px-4 py-10">
@@ -40,15 +39,15 @@ export default function Profile() {
         <div className="flex flex-col gap-4 text-lg">
           <div>
             <span className="font-semibold text-gray-700">Name: </span>
-            <span className="text-gray-800">{user.name}</span>
+            <span className="text-gray-800">{user?.name}</span>
           </div>
           <div>
             <span className="font-semibold text-gray-700">Email: </span>
-            <span className="text-gray-800">{user.email}</span>
+            <span className="text-gray-800">{user?.email}</span>
           </div>
           <div>
             <span className="font-semibold text-gray-700">Role: </span>
-            <span className="text-gray-800">{user.role}</span>
+            <span className="text-gray-800">{user?.role}</span>
           </div>
         </div>
       </div>

@@ -8,7 +8,7 @@ export async function GET(req, { params }) {
   try {
     await connectDB();
 
-    const userPosts = await Post.find({ userId: userId }).sort({
+    const userPosts = await Post.find({ user: userId }).sort({
       createdAt: -1,
     });
 
