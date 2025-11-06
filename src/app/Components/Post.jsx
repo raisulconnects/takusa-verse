@@ -77,7 +77,7 @@ export default function Post({ post }) {
         </span>
         <div className="flex items-center gap-2 text-sm text-gray-600">
           <span className="bg-pink-50 px-3 py-1 rounded-full shadow-inner">
-            👍 {post.likes.length} Likes
+            👍 {post?.likes?.length} Likes
           </span>
         </div>
       </div>
