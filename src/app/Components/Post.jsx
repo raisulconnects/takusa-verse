@@ -164,11 +164,16 @@ export default function Post({ post }) {
         )}
       </div>
 
-      {post.comments.length > 0 ? (
+      {Array.isArray(post?.comments) && post.comments.length > 0 ? (
+        <CommentSection commentPresent postId={post?._id} />
+      ) : (
+        <CommentSection commentPresent={false} postId={post?._id} />
+      )}
+      {/* {post.comments?.length > 0 ? (
         <CommentSection commentPresent={true} postId={post._id} />
       ) : (
         <CommentSection commentPresent={false} postId={post._id} />
-      )}
+      )} */}
     </div>
   );
 }
