@@ -58,15 +58,15 @@ export default function CommentSection({ commentPresent, postId }) {
     }
   };
 
-  if (comments.length === 0) {
+  const safeComments = Array.isArray(comments) ? comments : [];
+
+  if (safeComments.length === 0) {
     return (
       <div className="mt-4 border-t border-gray-200 pt-3">
         <div className="flex items-center gap-3 mb-3 bg-gray-50 rounded-2xl px-3 py-2 shadow-inner">
           <input
             value={inputComment}
-            onChange={(e) => {
-              setInputComment(e.target.value);
-            }}
+            onChange={(e) => setInputComment(e.target.value)}
             type="text"
             placeholder="Write a comment..."
             className="flex-1 bg-transparent outline-none text-sm placeholder-gray-400"
