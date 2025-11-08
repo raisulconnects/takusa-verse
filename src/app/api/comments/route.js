@@ -1,3 +1,6 @@
+export const dynamic = "force-dynamic"; // ✅ disables Next.js caching for this route
+export const revalidate = 0; // ✅ prevents ISR caching
+
 import { NextResponse } from "next/server";
 import connectDB from "../../../../lib/connectDB";
 import Comment from "../../../../models/Comment";

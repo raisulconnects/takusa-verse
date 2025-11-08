@@ -15,7 +15,9 @@ export default function CommentSection({ postId }) {
   useEffect(() => {
     const fetchComments = async () => {
       try {
-        const res = await fetch(`/api/comments?postId=${postId}`);
+        const res = await fetch(`/api/comments?postId=${postId}`, {
+          cache: "no-store",
+        });
         const data = await res.json();
         setComments(Array.isArray(data.data) ? data.data : []);
       } catch (err) {
