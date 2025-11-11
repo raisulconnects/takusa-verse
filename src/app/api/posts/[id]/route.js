@@ -56,3 +56,22 @@ export async function PUT(req, { params }) {
     return NextResponse.json({ message: error.message }, { status: 500 });
   }
 }
+
+// This API is Used for Single Posts, When we click Show Post, that's when we call this endpoint!
+export async function GET(req, { params }) {
+  const { id } = await params;
+
+  try {
+    await connectDB();
+    const post = await Post.findById({ _id: id }).populate("user").lean();
+
+    return NextResponse.json({ OnePost: post });
+  } catch (e) {
+    console.log("Error From Api/Posts/[id]: ", e.message);
+    return NextResponse.json({
+      OnePost: {},
+      message: "An Error Occured!",
+      Error: e.message,
+    });
+  }
+}

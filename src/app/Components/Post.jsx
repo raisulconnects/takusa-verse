@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import timeAgo from "../../../lib/timeAgo";
 import { useState } from "react";
 import CommentSection from "./CommentSection";
+import Link from "next/link";
 
 // export default function Post({ author, content, likes }) {
 
@@ -116,6 +117,15 @@ export default function Post({ post }) {
           {postIsLiked ? "Liked" : "Like"}
         </button>
 
+        <button
+          onClick={() => {
+            router.push(`/public-feed/${post._id}`);
+          }}
+          className={`flex-1 py-2 rounded-xl font-medium w-1/5 transition-all duration-200 shadow-sm bg-pink-400 text-white hover:bg-pink-600 `}
+        >
+          Show Post
+        </button>
+
         {isEditing ? (
           <button
             className="flex-1 py-2 rounded-xl font-medium bg-red-100 text-red-600 hover:bg-red-200 shadow-sm transition-all duration-200"
@@ -164,11 +174,11 @@ export default function Post({ post }) {
         )}
       </div>
 
-      {Array.isArray(post?.comments) && post.comments.length > 0 ? (
+      {/* {Array.isArray(post?.comments) && post.comments.length > 0 ? (
         <CommentSection commentPresent postId={post?._id} />
       ) : (
         <CommentSection commentPresent={false} postId={post?._id} />
-      )}
+      )} */}
       {/* {post.comments?.length > 0 ? (
         <CommentSection commentPresent={true} postId={post._id} />
       ) : (
