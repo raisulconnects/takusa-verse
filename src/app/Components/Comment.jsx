@@ -29,7 +29,7 @@ export default function Comment({ comment, commentsUpdater }) {
         <div className="flex items-center justify-between">
           <div className=" flex items-center gap-2">
             <span className="font-semibold text-pink-700 text-sm">
-              {comment.userId.name}
+              {comment?.userId?.name}
             </span>
             <span className="flex-1  text-gray-500 font-light text-[15px]">
               {time}

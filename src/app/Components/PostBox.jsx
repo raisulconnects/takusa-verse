@@ -52,6 +52,7 @@ export default function PostBox() {
           placeholder="Add a catchy title..."
           className="w-full p-3 mb-3 border-2 border-pink-300 rounded-2xl focus:outline-none focus:ring-2 focus:ring-pink-400 focus:border-pink-400 resize-none transition-all text-base sm:text-lg"
           rows={2}
+          maxLength={150}
         />
       )}
 
@@ -61,6 +62,7 @@ export default function PostBox() {
         placeholder="What's on your mind today..."
         className="w-full p-3 border-2 border-pink-300 rounded-2xl focus:outline-none focus:ring-2 focus:ring-pink-400 focus:border-pink-400 resize-none transition-all text-base sm:text-lg"
         rows={3}
+        maxLength={350}
       />
 
       {/* ✅ Button container responsive */}

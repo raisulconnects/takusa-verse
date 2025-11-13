@@ -7,19 +7,17 @@ import { useState } from "react";
 import CommentSection from "./CommentSection";
 import Link from "next/link";
 
-// export default function Post({ author, content, likes }) {
-
 export default function Post({ post }) {
   const { data } = useSession();
   const router = useRouter();
   const [isEditing, setIsEditing] = useState(false);
   const [editedText, setEditedText] = useState(post.post);
-  // console.log(data.user.role);
-  // console.log(data?.user?.id);
-  // console.log(post?.userId._id === data?.user?.id);
-  // post?.userId ==  data?.user?.id
 
-  const postIsLiked = post.likes.includes(data?.user?.id);
+  // 🪄 Optimistic UI states
+  const [optimisticLikes, setOptimisticLikes] = useState(post.likes.length);
+  const [optimisticIsLiked, setOptimisticIsLiked] = useState(
+    post.likes.includes(data?.user?.id)
+  );
 
   const handleDelete = async (postid) => {
     try {
@@ -32,17 +30,33 @@ export default function Post({ post }) {
     }
   };
 
+  // ⚡ Optimistic UI for Like
   const handleLike = async (postid) => {
+    if (!data?.user?.id) return; // user must be logged in
+
+    // 1️⃣ Instantly update UI
+    setOptimisticIsLiked((prev) => !prev);
+    setOptimisticLikes((prev) => (optimisticIsLiked ? prev - 1 : prev + 1));
+
     try {
-      await fetch(`/api/posts/${postid}`, {
+      // 2️⃣ Send actual request
+      const res = await fetch(`/api/posts/${postid}`, {
         method: "PUT",
         headers: {
           "Content-type": "application/json",
         },
         body: JSON.stringify({ userId: data.user.id }),
       });
-      router.refresh();
+
+      if (!res.ok) {
+        // 3️⃣ Rollback if failed
+        setOptimisticIsLiked((prev) => !prev);
+        setOptimisticLikes((prev) => (optimisticIsLiked ? prev + 1 : prev - 1));
+      }
     } catch (e) {
+      // 3️⃣ Rollback if error
+      setOptimisticIsLiked((prev) => !prev);
+      setOptimisticLikes((prev) => (optimisticIsLiked ? prev + 1 : prev - 1));
       console.log(e.message);
     }
   };
@@ -62,9 +76,8 @@ export default function Post({ post }) {
       console.log(e.message);
     }
   };
-  let postDateTime = timeAgo(post.createdAt);
 
-  // console.log(post);
+  let postDateTime = timeAgo(post.createdAt);
 
   return (
     <div className="bg-white/90 backdrop-blur-sm border border-pink-100 p-6 rounded-2xl shadow-sm hover:shadow-md transition-all duration-200 max-w-2xl mx-auto mt-6">
@@ -78,7 +91,7 @@ export default function Post({ post }) {
         </span>
         <div className="flex items-center gap-2 text-sm text-gray-600">
           <span className="bg-pink-50 px-3 py-1 rounded-full shadow-inner">
-            👍 {post?.likes?.length || 0} Likes
+            👍 {optimisticLikes} Likes
           </span>
         </div>
       </div>
@@ -108,13 +121,13 @@ export default function Post({ post }) {
         <button
           className={`flex-1 py-2 rounded-xl font-medium w-1/5 transition-all duration-200 shadow-sm 
           ${
-            postIsLiked
+            optimisticIsLiked
               ? "bg-pink-500 text-white hover:bg-pink-700"
               : "bg-pink-200 text-pink-700 hover:bg-pink-300"
           }`}
           onClick={() => handleLike(post._id)}
         >
-          {postIsLiked ? "Liked" : "Like"}
+          {optimisticIsLiked ? "Liked" : "Like"}
         </button>
 
         <button
@@ -153,7 +166,6 @@ export default function Post({ post }) {
           ""
         )}
 
-        {/* User Delete Button */}
         {post?.user._id === data?.user?.id && data?.user?.role !== "admin" && (
           <button
             className="flex-1 py-2 rounded-xl font-medium bg-red-100 text-red-600 hover:bg-red-200 shadow-sm transition-all duration-200"
@@ -163,7 +175,6 @@ export default function Post({ post }) {
           </button>
         )}
 
-        {/* Admin Delete Button */}
         {data?.user?.role === "admin" && (
           <button
             className="flex-1 py-2 rounded-xl font-medium bg-red-100 text-red-600 hover:bg-red-200 shadow-sm transition-all duration-200"
@@ -173,17 +184,6 @@ export default function Post({ post }) {
           </button>
         )}
       </div>
-
-      {/* {Array.isArray(post?.comments) && post.comments.length > 0 ? (
-        <CommentSection commentPresent postId={post?._id} />
-      ) : (
-        <CommentSection commentPresent={false} postId={post?._id} />
-      )} */}
-      {/* {post.comments?.length > 0 ? (
-        <CommentSection commentPresent={true} postId={post._id} />
-      ) : (
-        <CommentSection commentPresent={false} postId={post._id} />
-      )} */}
     </div>
   );
 }
