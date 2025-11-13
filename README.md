@@ -1,6 +1,6 @@
 # 📰 Takusa Blog
 
-A modern, full-stack blog platform built with **Next.js 14**, **MongoDB**, and **NextAuth**, featuring authentication, post management, commenting, and route protection — all styled with Tailwind for a sleek, minimal look.
+A modern, full-stack blog platform built with **Next.js 15**, **MongoDB**, and **NextAuth**, featuring authentication, post management, commenting, and route protection — all styled with Tailwind for a sleek, minimal look.
 
 ---
 
@@ -8,10 +8,11 @@ A modern, full-stack blog platform built with **Next.js 14**, **MongoDB**, and *
 
 **Frontend**
 
-- ⚡ Next.js 14 (App Router)
+- ⚡ Next.js 15 (App Router)
 - 🎨 Tailwind CSS
 - 🧭 Next Navigation (Client + Server components mix)
 - 🔁 SWR for efficient data fetching
+- ⚡ Optimistic UI updates for seamless user experience
 
 **Backend**
 
@@ -112,10 +113,6 @@ It checks for valid session tokens and guards restricted paths.
 🤖 AI-generated post summaries
 
 🏷️ Automatic tag suggestions
-
-📊 Dashboard analytics
-
-❤️ Likes system
 
 📱 Responsive dark mode
 
