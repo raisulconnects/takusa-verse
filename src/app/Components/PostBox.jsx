@@ -6,18 +6,65 @@ import { useState } from "react";
 
 export default function PostBox() {
   const [post, setPost] = useState("");
-  const [title, setTitle] = useState(""); // ✅ added: state for title
-  const [showTitle, setShowTitle] = useState(false); // ✅ added: toggle state
+  const [title, setTitle] = useState(""); // ✅ existing: title state
+  const [showTitle, setShowTitle] = useState(false); // ✅ existing: toggle title
   const { data: session } = useSession();
   const [loading, setLoading] = useState(false);
 
+  // ✅ New states for image upload
+  const [imageFile, setImageFile] = useState(null); // stores selected file
+  const [imagePreview, setImagePreview] = useState(null); // stores local preview URL
+  const [uploading, setUploading] = useState(false); // upload in progress state
+
   const nextRouter = useRouter();
 
+  // ✅ Handle file selection and show preview
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setImageFile(file);
+      setImagePreview(URL.createObjectURL(file)); // show preview immediately
+    }
+  };
+
+  // ✅ Upload image to Cloudinary using unsigned preset
+  const uploadToCloudinary = async () => {
+    if (!imageFile) return null;
+    setUploading(true);
+    const formData = new FormData();
+    formData.append("file", imageFile);
+    formData.append("upload_preset", "takusa_blog"); // your unsigned preset
+    try {
+      const res = await fetch(
+        "https://api.cloudinary.com/v1_1/dh5r86rqw/image/upload", // your cloud name
+        {
+          method: "POST",
+          body: formData,
+        }
+      );
+      const data = await res.json();
+      setUploading(false);
+      return data.secure_url; // ✅ URL to save in DB
+    } catch (err) {
+      console.error("Image upload failed:", err);
+      setUploading(false);
+      return null;
+    }
+  };
+
+  // ✅ Main post handler updated to handle image
   const handlePost = async () => {
     if (!post.trim()) return;
 
     try {
       setLoading(true);
+
+      // ✅ Upload image first if one was selected
+      let uploadedUrl = null;
+      if (imageFile) {
+        uploadedUrl = await uploadToCloudinary();
+      }
+
       const res = await fetch("/api/posts", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -26,13 +73,17 @@ export default function PostBox() {
           title: showTitle ? title : "",
           user: session.user.id,
           comments: [],
+          imageUrl: uploadedUrl, // ✅ send image URL to backend
         }),
       });
 
       if (!res.ok) throw new Error("Failed to post");
 
+      // ✅ Reset states after successful post
       setPost("");
       setTitle("");
+      setImageFile(null);
+      setImagePreview(null);
       setLoading(false);
       nextRouter.refresh();
     } catch (err) {
@@ -42,9 +93,8 @@ export default function PostBox() {
   };
 
   return (
-    // ✅ Responsive wrapper updated
     <div className="bg-white p-5 rounded-2xl shadow-md w-full max-w-2xl sm:max-w-3xl lg:max-w-2/4 m-3 mx-auto">
-      {/* ✅ Conditional title textarea */}
+      {/* Conditional title textarea */}
       {showTitle && (
         <textarea
           value={title}
@@ -62,10 +112,30 @@ export default function PostBox() {
         placeholder="What's on your mind today..."
         className="w-full p-3 border-2 border-pink-300 rounded-2xl focus:outline-none focus:ring-2 focus:ring-pink-400 focus:border-pink-400 resize-none transition-all text-base sm:text-lg"
         rows={3}
-        maxLength={350}
+        maxLength={600}
       />
 
-      {/* ✅ Button container responsive */}
+      {/* ✅ File input for image */}
+
+      {/* ✅ Image preview */}
+      {/* ✅ Styled file input as a button */}
+      <div className="mt-3">
+        <label
+          htmlFor="imageUpload"
+          className="cursor-pointer px-5 py-2 rounded-2xl font-semibold border-2 transition-all text-sm sm:text-base bg-pink-600 text-white hover:bg-pink-700"
+        >
+          {imageFile ? "Change Image" : "Upload Image"}
+        </label>
+        <input
+          id="imageUpload"
+          type="file"
+          accept="image/*"
+          onChange={handleImageChange}
+          className="hidden" // hide default input
+        />
+      </div>
+
+      {/* Button container */}
       <div className="flex flex-col sm:flex-row justify-end mt-4 gap-3 sm:gap-2">
         <button
           type="button"
@@ -81,10 +151,11 @@ export default function PostBox() {
 
         <button
           className="bg-pink-600 text-white px-6 py-2 rounded-2xl font-bold shadow-md hover:bg-pink-700 transition-all disabled:opacity-50 text-sm sm:text-base"
-          disabled={!post.trim() || loading}
+          disabled={!post.trim() || loading || uploading} // ✅ disabled while uploading image
           onClick={handlePost}
         >
-          Post
+          {uploading ? "Uploading..." : loading ? "Posting..." : "Post"}{" "}
+          {/* ✅ dynamic button text */}
         </button>
       </div>
     </div>

@@ -6,6 +6,7 @@ import timeAgo from "../../../lib/timeAgo";
 import { useState } from "react";
 import CommentSection from "./CommentSection";
 import Link from "next/link";
+import Image from "next/image";
 
 export default function Post({ post }) {
   const { data } = useSession();
@@ -30,7 +31,6 @@ export default function Post({ post }) {
     }
   };
 
-  // ⚡ Optimistic UI for Like
   const handleLike = async (postid) => {
     if (!data?.user?.id) return; // user must be logged in
 
@@ -100,6 +100,17 @@ export default function Post({ post }) {
         <h2 className="text-xl sm:text-2xl font-bold text-pink-800 mb-3 break-words text-center sm:text-left">
           {post.title}
         </h2>
+      )}
+
+      {/* ✅ Display image if present */}
+      {post.imageUrl && (
+        <Image
+          src={post.imageUrl}
+          alt="Post Image"
+          width={800} // ✅ set max width you want
+          height={400} // ✅ set an approximate height or aspect ratio
+          className="w-full object-cover rounded-lg mb-4"
+        />
       )}
 
       {/* Post Content */}
