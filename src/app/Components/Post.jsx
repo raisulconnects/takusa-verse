@@ -7,8 +7,10 @@ import { useState } from "react";
 import CommentSection from "./CommentSection";
 import Link from "next/link";
 import Image from "next/image";
+import { useFeedProvider } from "../Providers/FeedProvider";
 
 export default function Post({ post }) {
+  const { triggerRefreseh } = useFeedProvider();
   const { data } = useSession();
   const router = useRouter();
   const [isEditing, setIsEditing] = useState(false);
@@ -25,6 +27,7 @@ export default function Post({ post }) {
       await fetch(`/api/posts/${postid}`, {
         method: "DELETE",
       });
+      triggerRefreseh();
       router.refresh();
     } catch (e) {
       console.log(e.message);
