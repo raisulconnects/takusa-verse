@@ -3,22 +3,19 @@ import { getAllPosts } from "../../../lib/getAllPosts";
 import Post from "../Components/Post";
 import PostBox from "../Components/PostBox";
 import User from "../../../models/User";
+import FeedClient from "../Components/FeedClient";
+import { FeedContextProvider } from "../Providers/FeedProvider";
 
 export const dynamic = "force-dynamic";
 // export const revalidate = 10;
 
-export default async function PublicFeed() {
-  await connectDB();
-  const allPosts = await getAllPosts();
-  // console.log(allPosts);
-  console.log(" ---------------> PublicFeed Being Rebuild");
-
+export default function PublicFeed() {
   return (
-    <div className="">
-      <PostBox />
-      {allPosts?.map((post) => (
-        <Post key={post._id} post={post} />
-      ))}
+    <div>
+      <FeedContextProvider>
+        <PostBox />
+        <FeedClient />
+      </FeedContextProvider>
     </div>
   );
 }

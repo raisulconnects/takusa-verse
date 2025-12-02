@@ -6,6 +6,7 @@ const PostSchema = new mongoose.Schema(
     title: { type: String },
     post: { type: String, required: true },
     likes: { type: [String], default: [] }, // ✅ prevent undefined
+    imageUrl: { type: String, default: null },
     comments: {
       type: [mongoose.Schema.Types.ObjectId],
       ref: "Comment",

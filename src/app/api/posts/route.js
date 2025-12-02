@@ -3,6 +3,9 @@ import connectDB from "../../../../lib/connectDB";
 import Post from "@/app/../../models/Post";
 import { revalidateTag } from "next/cache";
 
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
 export async function POST(DATA) {
   const data = await DATA.json();
 
