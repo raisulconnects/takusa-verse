@@ -3,6 +3,7 @@
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { useFeedProvider } from "../Providers/FeedProvider";
 
 export default function PostBox() {
   const [post, setPost] = useState("");
@@ -10,6 +11,7 @@ export default function PostBox() {
   const [showTitle, setShowTitle] = useState(false); // ✅ existing: toggle title
   const { data: session } = useSession();
   const [loading, setLoading] = useState(false);
+  const { triggerRefreseh } = useFeedProvider();
 
   // ✅ New states for image upload
   const [imageFile, setImageFile] = useState(null); // stores selected file
@@ -86,6 +88,7 @@ export default function PostBox() {
       setImagePreview(null);
       setLoading(false);
       nextRouter.refresh();
+      triggerRefreseh();
     } catch (err) {
       console.error(err.message);
       setLoading(false);

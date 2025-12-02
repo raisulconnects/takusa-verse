@@ -4,6 +4,7 @@ import Post from "../Components/Post";
 import PostBox from "../Components/PostBox";
 import User from "../../../models/User";
 import FeedClient from "../Components/FeedClient";
+import { FeedContextProvider } from "../Providers/FeedProvider";
 
 export const dynamic = "force-dynamic";
 // export const revalidate = 10;
@@ -11,8 +12,10 @@ export const dynamic = "force-dynamic";
 export default function PublicFeed() {
   return (
     <div>
-      <PostBox />
-      <FeedClient />
+      <FeedContextProvider>
+        <PostBox />
+        <FeedClient />
+      </FeedContextProvider>
     </div>
   );
 }
