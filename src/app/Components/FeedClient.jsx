@@ -47,9 +47,9 @@ export default function FeedClient() {
   };
 
   // Load first batch
-  useEffect(() => {
-    fetchPosts();
-  }, []);
+  // useEffect(() => {
+  //   fetchPosts();
+  // }, []);
 
   useEffect(() => {
     setPosts([]);
