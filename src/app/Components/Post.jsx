@@ -73,7 +73,7 @@ export default function Post({ post }) {
         },
         body: JSON.stringify({ updatedText: editedText }),
       });
-
+      triggerRefreseh();
       router.refresh();
     } catch (e) {
       console.log(e.message);
