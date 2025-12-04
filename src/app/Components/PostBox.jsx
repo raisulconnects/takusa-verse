@@ -3,50 +3,52 @@
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { Loader2, X } from "lucide-react";
 import { useFeedProvider } from "../Providers/FeedProvider";
 
 export default function PostBox() {
   const [post, setPost] = useState("");
-  const [title, setTitle] = useState(""); // ✅ existing: title state
-  const [showTitle, setShowTitle] = useState(false); // ✅ existing: toggle title
+  const [title, setTitle] = useState("");
+  const [showTitle, setShowTitle] = useState(false);
   const { data: session } = useSession();
   const [loading, setLoading] = useState(false);
   const { triggerRefreseh } = useFeedProvider();
 
-  // ✅ New states for image upload
-  const [imageFile, setImageFile] = useState(null); // stores selected file
-  const [imagePreview, setImagePreview] = useState(null); // stores local preview URL
-  const [uploading, setUploading] = useState(false); // upload in progress state
+  const [imageFile, setImageFile] = useState(null);
+  const [imagePreview, setImagePreview] = useState(null);
+  const [uploading, setUploading] = useState(false);
 
   const nextRouter = useRouter();
 
-  // ✅ Handle file selection and show preview
   const handleImageChange = (e) => {
     const file = e.target.files[0];
     if (file) {
       setImageFile(file);
-      setImagePreview(URL.createObjectURL(file)); // show preview immediately
+      setImagePreview(URL.createObjectURL(file));
     }
   };
 
-  // ✅ Upload image to Cloudinary using unsigned preset
+  const removeImage = () => {
+    setImageFile(null);
+    setImagePreview(null);
+  };
+
   const uploadToCloudinary = async () => {
     if (!imageFile) return null;
     setUploading(true);
     const formData = new FormData();
     formData.append("file", imageFile);
-    formData.append("upload_preset", "takusa_blog"); // your unsigned preset
+    formData.append("upload_preset", "takusa_blog");
+
     try {
       const res = await fetch(
-        "https://api.cloudinary.com/v1_1/dh5r86rqw/image/upload", // your cloud name
-        {
-          method: "POST",
-          body: formData,
-        }
+        "https://api.cloudinary.com/v1_1/dh5r86rqw/image/upload",
+        { method: "POST", body: formData }
       );
+
       const data = await res.json();
       setUploading(false);
-      return data.secure_url; // ✅ URL to save in DB
+      return data.secure_url;
     } catch (err) {
       console.error("Image upload failed:", err);
       setUploading(false);
@@ -54,18 +56,14 @@ export default function PostBox() {
     }
   };
 
-  // ✅ Main post handler updated to handle image
   const handlePost = async () => {
     if (!post.trim()) return;
 
     try {
       setLoading(true);
 
-      // ✅ Upload image first if one was selected
       let uploadedUrl = null;
-      if (imageFile) {
-        uploadedUrl = await uploadToCloudinary();
-      }
+      if (imageFile) uploadedUrl = await uploadToCloudinary();
 
       const res = await fetch("/api/posts", {
         method: "POST",
@@ -75,17 +73,17 @@ export default function PostBox() {
           title: showTitle ? title : "",
           user: session.user.id,
           comments: [],
-          imageUrl: uploadedUrl, // ✅ send image URL to backend
+          imageUrl: uploadedUrl,
         }),
       });
 
       if (!res.ok) throw new Error("Failed to post");
 
-      // ✅ Reset states after successful post
       setPost("");
       setTitle("");
       setImageFile(null);
       setImagePreview(null);
+
       setLoading(false);
       nextRouter.refresh();
       triggerRefreseh();
@@ -97,7 +95,7 @@ export default function PostBox() {
 
   return (
     <div className="bg-white p-5 rounded-2xl shadow-md w-full max-w-2xl sm:max-w-3xl lg:max-w-2/4 m-3 mx-auto">
-      {/* Conditional title textarea */}
+      {/* TITLE */}
       {showTitle && (
         <textarea
           value={title}
@@ -109,6 +107,7 @@ export default function PostBox() {
         />
       )}
 
+      {/* MAIN POST TEXT */}
       <textarea
         value={post}
         onChange={(e) => setPost(e.target.value)}
@@ -118,10 +117,7 @@ export default function PostBox() {
         maxLength={600}
       />
 
-      {/* ✅ File input for image */}
-
-      {/* ✅ Image preview */}
-      {/* ✅ Styled file input as a button */}
+      {/* IMAGE UPLOAD */}
       <div className="mt-3">
         <label
           htmlFor="imageUpload"
@@ -129,16 +125,43 @@ export default function PostBox() {
         >
           {imageFile ? "Change Image" : "Upload Image"}
         </label>
+
         <input
           id="imageUpload"
           type="file"
           accept="image/*"
           onChange={handleImageChange}
-          className="hidden" // hide default input
+          className="hidden"
         />
+
+        {/* FILENAME + REMOVE BUTTON */}
+        {imageFile && (
+          <div className="mt-3 flex items-center gap-3 p-2 border rounded-xl bg-gray-50">
+            <p className="text-sm text-gray-700 font-medium">
+              {imageFile.name}
+            </p>
+
+            <button
+              type="button"
+              onClick={removeImage}
+              className="p-1 text-gray-600 hover:text-red-600 transition"
+            >
+              <X className="w-5 h-5" />
+            </button>
+          </div>
+        )}
+
+        {/* OPTIONAL: SMALL PREVIEW */}
+        {imagePreview && (
+          <img
+            src={imagePreview}
+            alt="Preview"
+            className="mt-3 w-32 h-32 object-cover rounded-xl border"
+          />
+        )}
       </div>
 
-      {/* Button container */}
+      {/* ACTION BUTTONS */}
       <div className="flex flex-col sm:flex-row justify-end mt-4 gap-3 sm:gap-2">
         <button
           type="button"
@@ -153,12 +176,15 @@ export default function PostBox() {
         </button>
 
         <button
-          className="bg-pink-600 text-white px-6 py-2 rounded-2xl font-bold shadow-md hover:bg-pink-700 transition-all disabled:opacity-50 text-sm sm:text-base"
-          disabled={!post.trim() || loading || uploading} // ✅ disabled while uploading image
+          className="bg-pink-600 text-white px-6 py-2 rounded-2xl font-bold shadow-md hover:bg-pink-700 transition-all disabled:opacity-50 text-sm sm:text-base flex items-center justify-center gap-2"
+          disabled={!post.trim() || loading || uploading}
           onClick={handlePost}
         >
-          {uploading ? "Uploading..." : loading ? "Posting..." : "Post"}{" "}
-          {/* ✅ dynamic button text */}
+          {uploading ? "Uploading..." : loading ? "Posting..." : "Post"}
+
+          {(uploading || loading) && (
+            <Loader2 className="w-4 h-4 animate-spin" />
+          )}
         </button>
       </div>
     </div>
