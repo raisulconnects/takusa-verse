@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import connectDB from "../../../../../lib/connectDB";
 import Post from "../../../../../models/Post";
+import User from "../../../../../models/User";
 
 export async function DELETE(req, { params }) {
   const { id } = params;

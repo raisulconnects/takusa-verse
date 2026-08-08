@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import connectDB from "../../../../lib/connectDB";
 import Post from "@/app/../../models/Post";
+import User from "@/app/../../models/User";
 import { revalidateTag } from "next/cache";
 
 export const dynamic = "force-dynamic";
