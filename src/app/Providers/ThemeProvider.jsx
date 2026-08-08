@@ -3,12 +3,12 @@
 import { createContext, useContext, useEffect, useState } from "react";
 
 const ThemeContext = createContext({
-  theme: "light",
+  theme: "dark",
   toggleTheme: () => {},
 });
 
 export function ThemeProvider({ children }) {
-  const [theme, setTheme] = useState("light");
+  const [theme, setTheme] = useState("dark");
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
@@ -22,11 +22,8 @@ export function ThemeProvider({ children }) {
         document.documentElement.classList.remove("dark");
       }
     } else {
-      const systemPrefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
-      if (systemPrefersDark) {
-        setTheme("dark");
-        document.documentElement.classList.add("dark");
-      }
+      setTheme("dark");
+      document.documentElement.classList.add("dark");
     }
   }, []);
 

@@ -2,13 +2,14 @@
 
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
+import { createPortal } from "react-dom";
 import timeAgo from "../../../lib/timeAgo";
 import { useEffect, useRef, useState } from "react";
 import CommentSection from "./CommentSection";
 import Link from "next/link";
 import Image from "next/image";
 import { useFeedProvider } from "../Providers/FeedProvider";
-import { Heart, MessageSquare, Clock, Pencil, Trash2, Check, AlertTriangle } from "lucide-react";
+import { Heart, MessageSquare, Clock, Pencil, Trash2, Check, AlertTriangle, X, Maximize2 } from "lucide-react";
 
 export default function Post({ post }) {
   const { triggerRefreseh } = useFeedProvider();
@@ -17,6 +18,7 @@ export default function Post({ post }) {
   const [isEditing, setIsEditing] = useState(false);
   const [editedText, setEditedText] = useState(post.post);
   const [confirmingDelete, setConfirmingDelete] = useState(false);
+  const [lightboxOpen, setLightboxOpen] = useState(false);
   const confirmTimer = useRef(null);
 
   useEffect(() => {
@@ -24,6 +26,21 @@ export default function Post({ post }) {
       if (confirmTimer.current) clearTimeout(confirmTimer.current);
     };
   }, []);
+
+  useEffect(() => {
+    if (!lightboxOpen) return;
+
+    const handleKeyDown = (e) => {
+      if (e.key === "Escape") setLightboxOpen(false);
+    };
+    document.addEventListener("keydown", handleKeyDown);
+    document.body.style.overflow = "hidden";
+
+    return () => {
+      document.removeEventListener("keydown", handleKeyDown);
+      document.body.style.overflow = "";
+    };
+  }, [lightboxOpen]);
 
   // 🪄 Optimistic UI states
   const [optimisticLikes, setOptimisticLikes] = useState(post.likes.length);
@@ -145,16 +162,66 @@ export default function Post({ post }) {
 
       {/* Display image if present */}
       {post.imageUrl && (
-        <div className="relative w-full rounded-2xl overflow-hidden mb-4 bg-slate-100 dark:bg-slate-800 border border-slate-200/60 dark:border-slate-800 shadow-xs">
+        <button
+          type="button"
+          onClick={() => setLightboxOpen(true)}
+          className="relative w-full rounded-2xl overflow-hidden mb-4 bg-slate-100 dark:bg-slate-800 border border-slate-200/60 dark:border-slate-800 shadow-xs cursor-zoom-in group/image"
+          title="Click to enlarge"
+        >
           <Image
             src={post.imageUrl}
             alt="Post Image"
             width={800}
             height={450}
-            className="w-full h-auto max-h-[480px] object-cover group-hover:scale-[1.01] transition-transform duration-300"
+            className="w-full h-auto max-h-[480px] object-cover group-hover/image:scale-[1.01] transition-transform duration-300"
           />
-        </div>
+          <div className="absolute inset-0 flex items-end justify-end p-3 opacity-0 group-hover/image:opacity-100 transition-opacity duration-200">
+            <div className="p-2 rounded-xl bg-black/50 backdrop-blur-sm text-white shadow-lg">
+              <Maximize2 className="w-4 h-4" />
+            </div>
+          </div>
+        </button>
       )}
+
+      {/* Image Modal (portal to body so it covers the whole viewport) */}
+      {lightboxOpen &&
+        post.imageUrl &&
+        createPortal(
+          <div
+            className="fixed inset-0 z-[100] flex items-center justify-center bg-black/70 backdrop-blur-sm p-4"
+            onClick={() => setLightboxOpen(false)}
+            role="dialog"
+            aria-modal="true"
+            aria-label="Post image"
+          >
+            <div
+              className="relative w-full max-w-3xl bg-white dark:bg-slate-900 rounded-3xl border border-slate-200/80 dark:border-slate-800 shadow-2xl overflow-hidden"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="flex items-center justify-between px-4 sm:px-5 py-3 border-b border-slate-100 dark:border-slate-800">
+                <span className="text-xs sm:text-sm font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">
+                  Image Preview
+                </span>
+                <button
+                  type="button"
+                  onClick={() => setLightboxOpen(false)}
+                  className="p-2 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-rose-50 dark:hover:bg-rose-950/50 hover:text-rose-600 dark:hover:text-rose-400 transition-colors cursor-pointer"
+                  title="Close (Esc)"
+                >
+                  <X className="w-4 h-4" />
+                </button>
+              </div>
+              <div className="p-3 sm:p-5 bg-slate-100/70 dark:bg-slate-950/40">
+                <img
+                  src={post.imageUrl}
+                  alt="Post Image"
+                  className="w-full max-h-[70vh] object-contain rounded-2xl"
+                />
+              </div>
+            </div>
+          </div>,
+          document.body
+        )}
 
       {/* Post Content */}
       {isEditing ? (

@@ -31,9 +31,7 @@ export default function RootLayout({ children }) {
               (function () {
                 try {
                   var stored = localStorage.getItem("takusa_theme");
-                  var dark = stored
-                    ? stored === "dark"
-                    : window.matchMedia("(prefers-color-scheme: dark)").matches;
+                  var dark = stored ? stored === "dark" : true;
                   if (dark) document.documentElement.classList.add("dark");
                 } catch (e) {}
               })();
