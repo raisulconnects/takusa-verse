@@ -6,6 +6,7 @@ import { createPortal } from "react-dom";
 import timeAgo from "../../../lib/timeAgo";
 import { useEffect, useRef, useState } from "react";
 import CommentSection from "./CommentSection";
+import AdminName from "./AdminName";
 import Link from "next/link";
 import Image from "next/image";
 import { useFeedProvider } from "../Providers/FeedProvider";
@@ -136,9 +137,11 @@ export default function Post({ post }) {
             {userInitials}
           </div>
           <div className="flex flex-col">
-            <span className="font-bold text-slate-900 dark:text-slate-100 text-sm sm:text-base tracking-tight">
-              {userName}
-            </span>
+            <AdminName
+              role={post?.user?.role}
+              name={userName}
+              className="font-bold text-slate-900 dark:text-slate-100 text-sm sm:text-base tracking-tight"
+            />
             <div className="flex items-center gap-1 text-[11px] font-semibold text-slate-600 dark:text-slate-400">
               <Clock className="w-3 h-3 text-slate-500 dark:text-slate-400" />
               <span>{postDateTime}</span>
