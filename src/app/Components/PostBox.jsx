@@ -3,7 +3,7 @@
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { Loader2, X } from "lucide-react";
+import { Loader2, X, Image as ImageIcon, Type, Send, Sparkles } from "lucide-react";
 import { useFeedProvider } from "../Providers/FeedProvider";
 
 export default function PostBox() {
@@ -93,100 +93,140 @@ export default function PostBox() {
     }
   };
 
+  const userName = session?.user?.name || "User";
+  const userInitials = userName
+    .split(" ")
+    .map((n) => n[0])
+    .join("")
+    .substring(0, 2)
+    .toUpperCase();
+
   return (
-    <div className="bg-white p-5 rounded-2xl shadow-md w-full max-w-2xl sm:max-w-3xl lg:max-w-2/4 m-3 mx-auto">
-      {/* TITLE */}
+    <div className="bg-white/90 backdrop-blur-md p-5 sm:p-6 rounded-3xl border border-slate-200/80 shadow-md shadow-slate-900/5 max-w-2xl mx-auto my-6 transition-all">
+      {/* User Header */}
+      <div className="flex items-center gap-3 mb-4">
+        <div className="w-10 h-10 rounded-2xl bg-gradient-to-tr from-rose-500 via-pink-500 to-amber-400 flex items-center justify-center text-white text-sm font-extrabold shadow-sm shadow-rose-500/20">
+          {userInitials}
+        </div>
+        <div>
+          <h3 className="text-sm font-bold text-slate-800">{userName}</h3>
+          <p className="text-xs font-semibold text-rose-500 flex items-center gap-1">
+            <Sparkles className="w-3 h-3 fill-current" />
+            Create a story
+          </p>
+        </div>
+      </div>
+
+      {/* OPTIONAL TITLE TEXTAREA */}
       {showTitle && (
-        <textarea
-          value={title}
-          onChange={(e) => setTitle(e.target.value)}
-          placeholder="Add a catchy title..."
-          className="w-full p-3 mb-3 border-2 border-pink-300 rounded-2xl focus:outline-none focus:ring-2 focus:ring-pink-400 focus:border-pink-400 resize-none transition-all text-base sm:text-lg"
-          rows={2}
-          maxLength={150}
-        />
+        <div className="mb-3 relative animate-fade-in">
+          <input
+            type="text"
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
+            placeholder="Add a catchy title..."
+            className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-2xl font-bold text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-rose-500/20 focus:border-rose-500 transition-all text-base"
+            maxLength={150}
+          />
+          <span className="absolute right-3 top-2.5 text-[10px] font-medium text-slate-400">
+            {title.length}/150
+          </span>
+        </div>
       )}
 
-      {/* MAIN POST TEXT */}
-      <textarea
-        value={post}
-        onChange={(e) => setPost(e.target.value)}
-        placeholder="What's on your mind today..."
-        className="w-full p-3 border-2 border-pink-300 rounded-2xl focus:outline-none focus:ring-2 focus:ring-pink-400 focus:border-pink-400 resize-none transition-all text-base sm:text-lg"
-        rows={3}
-        maxLength={600}
-      />
-
-      {/* IMAGE UPLOAD */}
-      <div className="mt-3">
-        <label
-          htmlFor="imageUpload"
-          className="cursor-pointer px-5 py-2 rounded-2xl font-semibold border-2 transition-all text-sm sm:text-base bg-pink-600 text-white hover:bg-pink-700"
-        >
-          {imageFile ? "Change Image" : "Upload Image"}
-        </label>
-
-        <input
-          id="imageUpload"
-          type="file"
-          accept="image/*"
-          onChange={handleImageChange}
-          className="hidden"
+      {/* MAIN POST TEXTAREA */}
+      <div className="relative">
+        <textarea
+          value={post}
+          onChange={(e) => setPost(e.target.value)}
+          placeholder="What's on your mind today..."
+          className="w-full p-4 bg-slate-50/70 border border-slate-200 rounded-2xl text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-rose-500/20 focus:border-rose-500 focus:bg-white resize-none transition-all text-sm sm:text-base font-medium min-h-[110px]"
+          rows={3}
+          maxLength={600}
         />
+        <span className="absolute right-3 bottom-3 text-[10px] font-medium text-slate-400">
+          {post.length}/600
+        </span>
+      </div>
 
-        {/* FILENAME + REMOVE BUTTON */}
-        {imageFile && (
-          <div className="mt-3 flex items-center gap-3 p-2 border rounded-xl bg-gray-50">
-            <p className="text-sm text-gray-700 font-medium">
-              {imageFile.name}
-            </p>
-
-            <button
-              type="button"
-              onClick={removeImage}
-              className="p-1 text-gray-600 hover:text-red-600 transition"
-            >
-              <X className="w-5 h-5" />
-            </button>
-          </div>
-        )}
-
-        {/* OPTIONAL: SMALL PREVIEW */}
-        {imagePreview && (
+      {/* IMAGE PREVIEW BOX */}
+      {imagePreview && (
+        <div className="relative mt-3 inline-block group">
           <img
             src={imagePreview}
             alt="Preview"
-            className="mt-3 w-32 h-32 object-cover rounded-xl border"
+            className="w-36 h-36 object-cover rounded-2xl border border-slate-200 shadow-sm"
           />
-        )}
-      </div>
+          <button
+            type="button"
+            onClick={removeImage}
+            className="absolute -top-2 -right-2 p-1.5 bg-slate-900/90 text-white rounded-full hover:bg-rose-600 transition-colors shadow-md cursor-pointer"
+            title="Remove Image"
+          >
+            <X className="w-4 h-4" />
+          </button>
+        </div>
+      )}
 
-      {/* ACTION BUTTONS */}
-      <div className="flex flex-col sm:flex-row justify-end mt-4 gap-3 sm:gap-2">
-        <button
-          type="button"
-          onClick={() => setShowTitle((prev) => !prev)}
-          className={`px-5 py-2 rounded-2xl font-semibold border-2 transition-all text-sm sm:text-base ${
-            showTitle
-              ? "bg-pink-200 border-pink-400 text-pink-700"
-              : "bg-white border-pink-300 text-pink-600 hover:bg-pink-100"
-          }`}
-        >
-          {showTitle ? "Remove Title" : "Add Title"}
-        </button>
+      {/* ACTIONS TOOLBAR */}
+      <div className="flex items-center justify-between mt-4 pt-3 border-t border-slate-100 gap-2">
+        <div className="flex items-center gap-2">
+          {/* Upload Image Button */}
+          <label
+            htmlFor="imageUpload"
+            className="flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs sm:text-sm font-semibold text-slate-600 hover:text-rose-600 hover:bg-rose-50 transition-all cursor-pointer border border-transparent hover:border-rose-200"
+          >
+            <ImageIcon className="w-4 h-4 text-rose-500" />
+            <span>{imageFile ? "Change Photo" : "Add Photo"}</span>
+          </label>
+          <input
+            id="imageUpload"
+            type="file"
+            accept="image/*"
+            onChange={handleImageChange}
+            className="hidden"
+          />
 
+          {/* Toggle Title Button */}
+          <button
+            type="button"
+            onClick={() => setShowTitle((prev) => !prev)}
+            className={`flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs sm:text-sm font-semibold transition-all cursor-pointer ${
+              showTitle
+                ? "bg-rose-100 text-rose-700 border border-rose-200"
+                : "text-slate-600 hover:text-rose-600 hover:bg-rose-50"
+            }`}
+          >
+            <Type className="w-4 h-4" />
+            <span>{showTitle ? "Remove Title" : "Add Title"}</span>
+          </button>
+        </div>
+
+        {/* Post Button */}
         <button
-          className="bg-pink-600 text-white px-6 py-2 rounded-2xl font-bold shadow-md hover:bg-pink-700 transition-all disabled:opacity-50 text-sm sm:text-base flex items-center justify-center gap-2"
+          className="bg-gradient-to-r from-rose-600 to-pink-600 hover:from-rose-700 hover:to-pink-700 text-white px-5 py-2 rounded-xl font-bold text-xs sm:text-sm shadow-md shadow-rose-500/20 hover:shadow-lg transition-all duration-200 disabled:opacity-50 flex items-center gap-2 cursor-pointer active:scale-95"
           disabled={!post.trim() || loading || uploading}
           onClick={handlePost}
         >
-          {uploading ? "Uploading..." : loading ? "Posting..." : "Post"}
-
-          {(uploading || loading) && (
-            <Loader2 className="w-4 h-4 animate-spin" />
+          {uploading ? (
+            <>
+              <span>Uploading...</span>
+              <Loader2 className="w-4 h-4 animate-spin" />
+            </>
+          ) : loading ? (
+            <>
+              <span>Posting...</span>
+              <Loader2 className="w-4 h-4 animate-spin" />
+            </>
+          ) : (
+            <>
+              <span>Post</span>
+              <Send className="w-3.5 h-3.5" />
+            </>
           )}
         </button>
       </div>
     </div>
   );
 }
+

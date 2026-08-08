@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import Post from "./Post";
 import { useFeedProvider } from "../Providers/FeedProvider";
+import { CheckCircle2, Sparkles } from "lucide-react";
 
 export default function FeedClient() {
   const [posts, setPosts] = useState([]);
@@ -46,11 +47,6 @@ export default function FeedClient() {
     }
   };
 
-  // Load first batch
-  // useEffect(() => {
-  //   fetchPosts();
-  // }, []);
-
   useEffect(() => {
     setPosts([]);
     setSkip(0);
@@ -68,7 +64,7 @@ export default function FeedClient() {
           fetchPosts();
         }
       },
-      { threshold: 1 }
+      { threshold: 0.5 }
     );
 
     observer.observe(loaderRef.current);
@@ -77,17 +73,51 @@ export default function FeedClient() {
   }, [loaderRef.current, hasMore, loading, refresherCount]);
 
   return (
-    <div>
+    <div className="pb-12">
       {posts.map((post) => (
         <Post key={post._id} post={post} />
       ))}
 
-      {/* Loader sentinel */}
-      <div ref={loaderRef} className="py-10 text-center">
-        {loading && <span className="text-gray-500">Loading...</span>}
+      {/* Loader sentinel & Skeleton */}
+      <div ref={loaderRef} className="py-8 max-w-2xl mx-auto px-4">
+        {loading && (
+          <div className="space-y-6">
+            {[1, 2].map((i) => (
+              <div
+                key={i}
+                className="bg-white/80 backdrop-blur-md border border-slate-200/60 p-6 rounded-3xl animate-pulse space-y-4 shadow-xs"
+              >
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-2xl bg-slate-200" />
+                  <div className="space-y-1.5 flex-1">
+                    <div className="h-4 bg-slate-200 rounded-full w-1/3" />
+                    <div className="h-3 bg-slate-200 rounded-full w-1/4" />
+                  </div>
+                </div>
+                <div className="h-5 bg-slate-200 rounded-lg w-3/4" />
+                <div className="h-40 bg-slate-200 rounded-2xl" />
+                <div className="flex gap-3 pt-2">
+                  <div className="h-9 bg-slate-200 rounded-xl flex-1" />
+                  <div className="h-9 bg-slate-200 rounded-xl flex-1" />
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
 
-        {!hasMore && <span className="text-gray-400">No more posts</span>}
+        {!hasMore && posts.length > 0 && (
+          <div className="flex flex-col items-center justify-center gap-2 py-6 text-center text-slate-500">
+            <div className="w-10 h-10 rounded-full bg-rose-50 border border-rose-100 flex items-center justify-center text-rose-500">
+              <CheckCircle2 className="w-5 h-5" />
+            </div>
+            <p className="text-xs font-bold uppercase tracking-wider text-slate-600">
+              You're all caught up!
+            </p>
+            <p className="text-xs text-slate-500">No more posts to display right now.</p>
+          </div>
+        )}
       </div>
     </div>
   );
 }
+

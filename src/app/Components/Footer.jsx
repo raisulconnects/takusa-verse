@@ -1,40 +1,48 @@
 "use client";
 
 import Link from "next/link";
-import { Github, Linkedin } from "lucide-react";
+import { Github, Linkedin, Heart } from "lucide-react";
 
 export default function Footer() {
   return (
-    <footer className="bg-white border-t-2 border-pink-100 py-6 px-6 mt-10 shadow-sm">
-      <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between text-gray-700">
-        {/* Left Side - Brand and Text */}
-        <p className="text-sm text-center md:text-left mb-4 md:mb-0">
-          © {new Date().getFullYear()}{" "}
-          <span className="font-semibold text-pink-700">Takusa Blog</span> —
-          Built by Raisul Tanna.
-        </p>
+    <footer className="mt-16 bg-white/70 backdrop-blur-md border-t border-slate-200/80 py-8 px-6">
+      <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4 text-slate-600 text-sm">
+        {/* Left Side */}
+        <div className="flex items-center gap-2 text-center md:text-left">
+          <span>© {new Date().getFullYear()}</span>
+          <span className="font-extrabold bg-gradient-to-r from-rose-600 to-amber-500 bg-clip-text text-transparent">
+            Takusa Verse
+          </span>
+          <span className="text-slate-400">•</span>
+          <span className="flex items-center gap-1 text-slate-500">
+            Crafted with <Heart className="w-3.5 h-3.5 fill-rose-500 text-rose-500 inline" /> by Raisul Tanna
+          </span>
+        </div>
 
-        {/* Right Side - Social Links */}
-        <div className="flex gap-3">
+        {/* Right Side */}
+        <div className="flex items-center gap-3">
           <Link
-            href={"https://github.com/raisulconnects"}
+            href="https://github.com/raisulconnects"
             target="_blank"
-            className="flex items-center gap-2 px-4 py-2 bg-gray-900 text-white rounded-2xl font-medium hover:bg-gray-800 transition-all shadow-md"
+            rel="noopener noreferrer"
+            className="flex items-center gap-2 px-3.5 py-2 bg-slate-900 text-white rounded-xl text-xs font-semibold hover:bg-slate-800 transition-all shadow-xs"
           >
-            <Github size={18} />
-            <span className="hidden sm:inline">GitHub</span>
+            <Github className="w-4 h-4" />
+            <span>GitHub</span>
           </Link>
 
           <Link
-            href={"https://linkedin.com/in/raisul-tanna"}
+            href="https://linkedin.com/in/raisul-tanna"
             target="_blank"
-            className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-2xl font-medium hover:bg-blue-700 transition-all shadow-md"
+            rel="noopener noreferrer"
+            className="flex items-center gap-2 px-3.5 py-2 bg-sky-600 text-white rounded-xl text-xs font-semibold hover:bg-sky-700 transition-all shadow-xs"
           >
-            <Linkedin size={18} />
-            <span className="hidden sm:inline">LinkedIn</span>
+            <Linkedin className="w-4 h-4" />
+            <span>LinkedIn</span>
           </Link>
         </div>
       </div>
     </footer>
   );
 }
+

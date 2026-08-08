@@ -8,6 +8,7 @@ import CommentSection from "./CommentSection";
 import Link from "next/link";
 import Image from "next/image";
 import { useFeedProvider } from "../Providers/FeedProvider";
+import { Heart, MessageSquare, Clock, Pencil, Trash2, Check, ExternalLink } from "lucide-react";
 
 export default function Post({ post }) {
   const { triggerRefreseh } = useFeedProvider();
@@ -81,81 +82,107 @@ export default function Post({ post }) {
   };
 
   let postDateTime = timeAgo(post.createdAt);
+  const userName = post?.user?.name || "Anonymous";
+  const userInitials = userName
+    .split(" ")
+    .map((n) => n[0])
+    .join("")
+    .substring(0, 2)
+    .toUpperCase();
 
   return (
-    <div className="bg-white/90 backdrop-blur-sm border border-pink-100 p-6 rounded-2xl shadow-sm hover:shadow-md transition-all duration-200 max-w-2xl mx-auto mt-6">
-      {/* Header */}
-      <div className="flex flex-wrap items-center justify-between mb-2 gap-1.5">
-        <span className="font-semibold text-pink-700 text-lg tracking-tight">
-          {post.user.name}
-        </span>
-        <span className="flex-1 text-pink-400 text-sm tracking-tight text-right sm:text-left">
-          {postDateTime}
-        </span>
-        <div className="flex items-center gap-2 text-sm text-gray-600">
-          <span className="bg-pink-50 px-3 py-1 rounded-full shadow-inner">
-            👍 {optimisticLikes} Likes
-          </span>
+    <article className="bg-white/90 backdrop-blur-md border border-slate-200/80 rounded-3xl p-5 sm:p-6 shadow-sm hover:shadow-md transition-all duration-300 max-w-2xl mx-auto mt-6 group">
+      {/* Author & Header Bar */}
+      <div className="flex items-center justify-between gap-3 mb-4">
+        <div className="flex items-center gap-3">
+          {/* Avatar Pill */}
+          <div className="w-10 h-10 rounded-2xl bg-gradient-to-tr from-rose-500 via-pink-500 to-amber-400 flex items-center justify-center text-white text-xs font-extrabold shadow-sm shadow-rose-500/20">
+            {userInitials}
+          </div>
+          <div className="flex flex-col">
+            <span className="font-bold text-slate-900 text-sm sm:text-base tracking-tight">
+              {userName}
+            </span>
+            <div className="flex items-center gap-1 text-[11px] font-semibold text-slate-600">
+              <Clock className="w-3 h-3 text-slate-500" />
+              <span>{postDateTime}</span>
+            </div>
+          </div>
+        </div>
+
+        {/* Reaction Pill Badge */}
+        <div className="flex items-center gap-1.5 px-3 py-1 bg-rose-50 border border-rose-100 rounded-full text-xs font-bold text-rose-700">
+          <Heart className={`w-3.5 h-3.5 ${optimisticLikes > 0 ? "fill-rose-500 text-rose-500" : "text-rose-400"}`} />
+          <span>{optimisticLikes} {optimisticLikes === 1 ? "Like" : "Likes"}</span>
         </div>
       </div>
 
+      {/* Post Title */}
       {post.title && (
-        <h2 className="text-xl sm:text-2xl font-bold text-pink-800 mb-3 break-words text-center sm:text-left">
+        <h2 className="text-lg sm:text-xl font-extrabold text-slate-900 mb-3 tracking-tight leading-snug break-words">
           {post.title}
         </h2>
       )}
 
-      {/* ✅ Display image if present */}
+      {/* Display image if present */}
       {post.imageUrl && (
-        <Image
-          src={post.imageUrl}
-          alt="Post Image"
-          width={800} // ✅ set max width you want
-          height={400} // ✅ set an approximate height or aspect ratio
-          className="w-full object-cover rounded-lg mb-4"
-        />
+        <div className="relative w-full rounded-2xl overflow-hidden mb-4 bg-slate-100 border border-slate-200/60 shadow-xs">
+          <Image
+            src={post.imageUrl}
+            alt="Post Image"
+            width={800}
+            height={450}
+            className="w-full h-auto max-h-[480px] object-cover group-hover:scale-[1.01] transition-transform duration-300"
+          />
+        </div>
       )}
 
       {/* Post Content */}
       {isEditing ? (
-        <textarea
-          value={editedText}
-          onChange={(e) => setEditedText(e.target.value)}
-          className="w-full p-3 border border-pink-200 rounded-2xl bg-pink-50/60 text-gray-800 focus:outline-none focus:ring-2 focus:ring-pink-300 focus:border-pink-400 shadow-inner transition-all duration-200 resize-none"
-          rows={3}
-        />
+        <div className="mb-4">
+          <textarea
+            value={editedText}
+            onChange={(e) => setEditedText(e.target.value)}
+            className="w-full p-4 border border-rose-300 rounded-2xl bg-rose-50/50 text-slate-800 focus:outline-none focus:ring-2 focus:ring-rose-500/20 focus:border-rose-500 shadow-inner transition-all duration-200 resize-none text-sm font-medium"
+            rows={3}
+          />
+        </div>
       ) : (
-        <p className="text-gray-800 text-base leading-relaxed border-l-4 border-pink-200 pl-3">
+        <p className="text-slate-700 text-sm sm:text-base leading-relaxed mb-4 pl-3 border-l-2 border-rose-400 font-medium whitespace-pre-line">
           {post.post}
         </p>
       )}
 
-      {/* Action Buttons */}
-      <div className="flex flex-wrap gap-3 mt-4">
+      {/* Action Buttons Bar */}
+      <div className="flex flex-wrap items-center gap-2 pt-3 border-t border-slate-100">
+        {/* Like Button */}
         <button
-          className={`flex-1 py-2 rounded-xl font-medium w-1/5 transition-all duration-200 shadow-sm 
-          ${
+          className={`flex-1 min-w-[90px] py-2 px-3 rounded-xl font-bold text-xs sm:text-sm flex items-center justify-center gap-1.5 transition-all duration-200 cursor-pointer active:scale-95 shadow-xs ${
             optimisticIsLiked
-              ? "bg-pink-500 text-white hover:bg-pink-700"
-              : "bg-pink-200 text-pink-700 hover:bg-pink-300"
+              ? "bg-rose-600 text-white shadow-rose-500/20 hover:bg-rose-700"
+              : "bg-slate-100 text-slate-700 hover:bg-rose-50 hover:text-rose-600"
           }`}
           onClick={() => handleLike(post._id)}
         >
-          {optimisticIsLiked ? "Liked" : "Like"}
+          <Heart className={`w-4 h-4 ${optimisticIsLiked ? "fill-white" : ""}`} />
+          <span>{optimisticIsLiked ? "Liked" : "Like"}</span>
         </button>
 
+        {/* Show Post / Details Button */}
         <button
           onClick={() => {
             router.push(`/public-feed/${post._id}`);
           }}
-          className={`flex-1 py-2 rounded-xl font-medium w-1/5 transition-all duration-200 shadow-sm bg-pink-400 text-white hover:bg-pink-600 `}
+          className="flex-1 min-w-[110px] py-2 px-3 rounded-xl font-bold text-xs sm:text-sm flex items-center justify-center gap-1.5 bg-slate-900 text-white hover:bg-slate-800 transition-all duration-200 shadow-xs cursor-pointer active:scale-95"
         >
-          Show Post
+          <MessageSquare className="w-4 h-4" />
+          <span>Comments</span>
         </button>
 
+        {/* Edit Button */}
         {isEditing ? (
           <button
-            className="flex-1 py-2 rounded-xl font-medium bg-red-100 text-red-600 hover:bg-red-200 shadow-sm transition-all duration-200"
+            className="py-2 px-4 rounded-xl font-bold text-xs sm:text-sm bg-emerald-600 hover:bg-emerald-700 text-white shadow-xs transition-all duration-200 flex items-center justify-center gap-1.5 cursor-pointer"
             onClick={() => {
               if (editedText === post.post) {
                 setIsEditing(false);
@@ -165,39 +192,42 @@ export default function Post({ post }) {
               setIsEditing(false);
             }}
           >
-            Save
+            <Check className="w-4 h-4" />
+            <span>Save</span>
           </button>
-        ) : post?.user._id === data?.user?.id ? (
+        ) : post?.user?._id === data?.user?.id ? (
           <button
-            className="flex-1 py-2 rounded-xl font-medium bg-red-100 text-red-600 hover:bg-red-200 shadow-sm transition-all duration-200"
-            onClick={() => {
-              setIsEditing(true);
-            }}
+            className="py-2 px-3 rounded-xl font-semibold text-xs sm:text-sm bg-slate-100 text-slate-700 hover:bg-slate-200 transition-all duration-200 flex items-center justify-center gap-1.5 cursor-pointer"
+            onClick={() => setIsEditing(true)}
           >
-            Edit
+            <Pencil className="w-3.5 h-3.5" />
+            <span>Edit</span>
           </button>
-        ) : (
-          ""
-        )}
+        ) : null}
 
-        {post?.user._id === data?.user?.id && data?.user?.role !== "admin" && (
+        {/* Delete Button */}
+        {post?.user?._id === data?.user?.id && data?.user?.role !== "admin" && (
           <button
-            className="flex-1 py-2 rounded-xl font-medium bg-red-100 text-red-600 hover:bg-red-200 shadow-sm transition-all duration-200"
+            className="py-2 px-3 rounded-xl font-semibold text-xs sm:text-sm bg-rose-50 text-rose-600 hover:bg-rose-100 transition-all duration-200 flex items-center justify-center gap-1.5 cursor-pointer"
             onClick={() => handleDelete(post._id)}
           >
-            Delete
+            <Trash2 className="w-3.5 h-3.5" />
+            <span>Delete</span>
           </button>
         )}
 
+        {/* Admin Delete Button */}
         {data?.user?.role === "admin" && (
           <button
-            className="flex-1 py-2 rounded-xl font-medium bg-red-100 text-red-600 hover:bg-red-200 shadow-sm transition-all duration-200"
+            className="py-2 px-3 rounded-xl font-semibold text-xs sm:text-sm bg-rose-100 text-rose-700 hover:bg-rose-200 transition-all duration-200 flex items-center justify-center gap-1.5 cursor-pointer"
             onClick={() => handleDelete(post._id)}
           >
-            Admin Delete
+            <Trash2 className="w-3.5 h-3.5" />
+            <span>Admin Delete</span>
           </button>
         )}
       </div>
-    </div>
+    </article>
   );
 }
+
