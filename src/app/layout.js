@@ -1,6 +1,7 @@
 import { Plus_Jakarta_Sans, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import SessionContextProvider from "./Providers/SessionProvider";
+import { ThemeProvider } from "./Providers/ThemeProvider";
 import Navbar from "./Components/Navbar";
 import Footer from "./Components/Footer";
 
@@ -23,16 +24,36 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en" className="scroll-smooth">
+      <head>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              (function () {
+                try {
+                  var stored = localStorage.getItem("takusa_theme");
+                  var dark = stored
+                    ? stored === "dark"
+                    : window.matchMedia("(prefers-color-scheme: dark)").matches;
+                  if (dark) document.documentElement.classList.add("dark");
+                } catch (e) {}
+              })();
+            `,
+          }}
+        />
+      </head>
       <body
-        className={`${plusJakarta.variable} ${geistMono.variable} font-sans antialiased bg-slate-50 text-slate-800 min-h-screen selection:bg-rose-500 selection:text-white flex flex-col justify-between`}
+        className={`${plusJakarta.variable} ${geistMono.variable} font-sans antialiased bg-slate-50 text-slate-800 dark:bg-slate-950 dark:text-slate-100 min-h-screen selection:bg-rose-500 selection:text-white flex flex-col justify-between transition-colors duration-200`}
       >
-        <SessionContextProvider>
-          <Navbar />
-          <div className="flex-1">{children}</div>
-          <Footer />
-        </SessionContextProvider>
+        <ThemeProvider>
+          <SessionContextProvider>
+            <Navbar />
+            <div className="flex-1">{children}</div>
+            <Footer />
+          </SessionContextProvider>
+        </ThemeProvider>
       </body>
     </html>
   );
 }
+
 

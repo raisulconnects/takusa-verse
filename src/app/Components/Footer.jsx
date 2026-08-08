@@ -5,16 +5,16 @@ import { Github, Linkedin, Heart } from "lucide-react";
 
 export default function Footer() {
   return (
-    <footer className="mt-16 bg-white/70 backdrop-blur-md border-t border-slate-200/80 py-8 px-6">
-      <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4 text-slate-600 text-sm">
+    <footer className="mt-16 bg-white/70 dark:bg-slate-900/80 backdrop-blur-md border-t border-slate-200/80 dark:border-slate-800 py-8 px-6">
+      <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4 text-slate-600 dark:text-slate-400 text-sm">
         {/* Left Side */}
         <div className="flex items-center gap-2 text-center md:text-left">
           <span>© {new Date().getFullYear()}</span>
           <span className="font-extrabold bg-gradient-to-r from-rose-600 to-amber-500 bg-clip-text text-transparent">
             Takusa Verse
           </span>
-          <span className="text-slate-400">•</span>
-          <span className="flex items-center gap-1 text-slate-500">
+          <span className="text-slate-400 dark:text-slate-600">•</span>
+          <span className="flex items-center gap-1 text-slate-500 dark:text-slate-400">
             Crafted with <Heart className="w-3.5 h-3.5 fill-rose-500 text-rose-500 inline" /> by Raisul Tanna
           </span>
         </div>

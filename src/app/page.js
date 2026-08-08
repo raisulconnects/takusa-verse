@@ -10,13 +10,13 @@ export default function Home() {
       {/* Hero Content Container */}
       <div className="max-w-3xl mx-auto text-center space-y-8">
         {/* Top Tagline Badge */}
-        <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-rose-50 border border-rose-200/70 shadow-xs text-rose-700 text-xs sm:text-sm font-semibold animate-fade-in">
+        <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-rose-50 dark:bg-rose-950/50 border border-rose-200/70 dark:border-rose-900/50 shadow-xs text-rose-700 dark:text-rose-300 text-xs sm:text-sm font-semibold animate-fade-in">
           <Sparkles className="w-4 h-4 text-rose-500 fill-rose-500" />
           <span>The Next Generation Blogging Platform</span>
         </div>
 
         {/* Hero Title */}
-        <h1 className="text-4xl sm:text-6xl md:text-7xl font-extrabold tracking-tight text-slate-900 leading-[1.1]">
+        <h1 className="text-4xl sm:text-6xl md:text-7xl font-extrabold tracking-tight text-slate-900 dark:text-white leading-[1.1]">
           Share stories, inspire minds &{" "}
           <span className="bg-gradient-to-r from-rose-600 via-pink-600 to-amber-500 bg-clip-text text-transparent">
             connect globally
@@ -24,7 +24,7 @@ export default function Home() {
         </h1>
 
         {/* Hero Subtitle */}
-        <p className="text-base sm:text-xl text-slate-600 max-w-2xl mx-auto leading-relaxed font-medium">
+        <p className="text-base sm:text-xl text-slate-600 dark:text-slate-300 max-w-2xl mx-auto leading-relaxed font-medium">
           Express your ideas effortlessly. Discover inspiring content, engage with readers through real-time discussions, and build your digital footprint.
         </p>
 
@@ -40,14 +40,14 @@ export default function Home() {
 
           <Link
             href="/register"
-            className="w-full sm:w-auto px-8 py-3.5 bg-white border border-slate-200/80 hover:border-rose-300 text-slate-700 hover:text-rose-600 font-bold rounded-2xl shadow-xs hover:shadow-md transition-all duration-200 flex items-center justify-center gap-2 cursor-pointer"
+            className="w-full sm:w-auto px-8 py-3.5 bg-white dark:bg-slate-800 border border-slate-200/80 dark:border-slate-700 hover:border-rose-300 dark:hover:border-slate-600 text-slate-700 dark:text-slate-200 hover:text-rose-600 dark:hover:text-rose-400 font-bold rounded-2xl shadow-xs hover:shadow-md transition-all duration-200 flex items-center justify-center gap-2 cursor-pointer"
           >
             <span>Create Account</span>
           </Link>
 
           <Link
             href="/about"
-            className="w-full sm:w-auto px-6 py-3.5 bg-slate-100 hover:bg-slate-200/70 text-slate-600 font-semibold rounded-2xl transition-all duration-200 flex items-center justify-center gap-2 cursor-pointer"
+            className="w-full sm:w-auto px-6 py-3.5 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200/70 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300 font-semibold rounded-2xl transition-all duration-200 flex items-center justify-center gap-2 cursor-pointer"
           >
             <span>Learn More</span>
           </Link>
@@ -55,33 +55,33 @@ export default function Home() {
 
         {/* Feature Highlights Pill Bar */}
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-12 text-left max-w-2xl mx-auto">
-          <div className="p-4 rounded-2xl bg-white/80 border border-slate-200/60 shadow-xs flex items-start gap-3">
-            <div className="p-2.5 rounded-xl bg-rose-50 text-rose-600">
+          <div className="p-4 rounded-2xl bg-white/80 dark:bg-slate-900/80 border border-slate-200/60 dark:border-slate-800 shadow-xs flex items-start gap-3">
+            <div className="p-2.5 rounded-xl bg-rose-50 dark:bg-rose-950/50 text-rose-600 dark:text-rose-400">
               <BookOpen className="w-5 h-5" />
             </div>
             <div>
-              <h3 className="font-bold text-slate-800 text-sm">Rich Publishing</h3>
-              <p className="text-xs text-slate-500 mt-0.5">Post stories with titles & images seamlessly.</p>
+              <h3 className="font-bold text-slate-800 dark:text-slate-100 text-sm">Rich Publishing</h3>
+              <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">Post stories with titles &amp; images seamlessly.</p>
             </div>
           </div>
 
-          <div className="p-4 rounded-2xl bg-white/80 border border-slate-200/60 shadow-xs flex items-start gap-3">
-            <div className="p-2.5 rounded-xl bg-amber-50 text-amber-600">
+          <div className="p-4 rounded-2xl bg-white/80 dark:bg-slate-900/80 border border-slate-200/60 dark:border-slate-800 shadow-xs flex items-start gap-3">
+            <div className="p-2.5 rounded-xl bg-amber-50 dark:bg-amber-950/40 text-amber-600 dark:text-amber-400">
               <Users className="w-5 h-5" />
             </div>
             <div>
-              <h3 className="font-bold text-slate-800 text-sm">Active Feed</h3>
-              <p className="text-xs text-slate-500 mt-0.5">Engage, like & comment on community posts.</p>
+              <h3 className="font-bold text-slate-800 dark:text-slate-100 text-sm">Active Feed</h3>
+              <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">Engage, like &amp; comment on community posts.</p>
             </div>
           </div>
 
-          <div className="p-4 rounded-2xl bg-white/80 border border-slate-200/60 shadow-xs flex items-start gap-3">
-            <div className="p-2.5 rounded-xl bg-emerald-50 text-emerald-600">
+          <div className="p-4 rounded-2xl bg-white/80 dark:bg-slate-900/80 border border-slate-200/60 dark:border-slate-800 shadow-xs flex items-start gap-3">
+            <div className="p-2.5 rounded-xl bg-emerald-50 dark:bg-emerald-950/40 text-emerald-600 dark:text-emerald-400">
               <ShieldCheck className="w-5 h-5" />
             </div>
             <div>
-              <h3 className="font-bold text-slate-800 text-sm">Safe & Fast</h3>
-              <p className="text-xs text-slate-500 mt-0.5">Powered by Next-Auth & Cloudinary.</p>
+              <h3 className="font-bold text-slate-800 dark:text-slate-100 text-sm">Safe &amp; Fast</h3>
+              <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">Powered by Next-Auth &amp; Cloudinary.</p>
             </div>
           </div>
         </div>

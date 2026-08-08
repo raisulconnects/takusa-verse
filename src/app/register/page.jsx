@@ -56,16 +56,16 @@ export default function Register() {
       {/* Background Glow */}
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-gradient-to-tr from-rose-300/30 via-pink-400/20 to-amber-200/30 rounded-full blur-3xl -z-10 pointer-events-none" />
 
-      <div className="w-full max-w-md bg-white/80 backdrop-blur-xl p-8 sm:p-10 rounded-3xl border border-slate-200/80 shadow-xl shadow-rose-950/5">
+      <div className="w-full max-w-md bg-white/80 dark:bg-slate-900/90 backdrop-blur-xl p-8 sm:p-10 rounded-3xl border border-slate-200/80 dark:border-slate-800 shadow-xl shadow-rose-950/5">
         {/* Header */}
         <div className="text-center mb-6">
           <div className="inline-flex p-3 rounded-2xl bg-gradient-to-tr from-rose-500 to-pink-600 text-white shadow-md shadow-rose-500/20 mb-3">
             <Sparkles className="w-6 h-6 fill-current" />
           </div>
-          <h2 className="text-3xl font-extrabold text-slate-900 tracking-tight">
+          <h2 className="text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight">
             Create Account
           </h2>
-          <p className="text-sm text-slate-500 mt-1 font-medium">
+          <p className="text-sm text-slate-500 dark:text-slate-400 mt-1 font-medium">
             Join the Takusa community today
           </p>
         </div>
@@ -74,7 +74,7 @@ export default function Register() {
         <form className="space-y-4" onSubmit={handleSubmit}>
           {/* Full Name */}
           <div className="space-y-1.5">
-            <label htmlFor="name" className="block text-xs font-bold uppercase tracking-wider text-slate-600">
+            <label htmlFor="name" className="block text-xs font-bold uppercase tracking-wider text-slate-600 dark:text-slate-400">
               Full Name
             </label>
             <div className="relative">
@@ -86,7 +86,7 @@ export default function Register() {
                 id="name"
                 name="name"
                 placeholder="Alex Morgan"
-                className="w-full pl-11 pr-4 py-2.5 bg-slate-50/80 border border-slate-200 rounded-xl text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-rose-500/20 focus:border-rose-500 focus:bg-white transition-all text-sm font-medium"
+                className="w-full pl-11 pr-4 py-2.5 bg-slate-50/80 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 rounded-xl text-slate-800 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-rose-500/20 focus:border-rose-500 focus:bg-white dark:focus:bg-slate-800 transition-all text-sm font-medium"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
                 required
@@ -96,7 +96,7 @@ export default function Register() {
 
           {/* Email */}
           <div className="space-y-1.5">
-            <label htmlFor="email" className="block text-xs font-bold uppercase tracking-wider text-slate-600">
+            <label htmlFor="email" className="block text-xs font-bold uppercase tracking-wider text-slate-600 dark:text-slate-400">
               Email Address
             </label>
             <div className="relative">
@@ -108,7 +108,7 @@ export default function Register() {
                 id="email"
                 name="email"
                 placeholder="you@example.com"
-                className="w-full pl-11 pr-4 py-2.5 bg-slate-50/80 border border-slate-200 rounded-xl text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-rose-500/20 focus:border-rose-500 focus:bg-white transition-all text-sm font-medium"
+                className="w-full pl-11 pr-4 py-2.5 bg-slate-50/80 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 rounded-xl text-slate-800 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-rose-500/20 focus:border-rose-500 focus:bg-white dark:focus:bg-slate-800 transition-all text-sm font-medium"
                 onChange={(e) => setEmail(e.target.value)}
                 value={email}
                 required
@@ -118,7 +118,7 @@ export default function Register() {
 
           {/* Password */}
           <div className="space-y-1.5">
-            <label htmlFor="password" className="block text-xs font-bold uppercase tracking-wider text-slate-600">
+            <label htmlFor="password" className="block text-xs font-bold uppercase tracking-wider text-slate-600 dark:text-slate-400">
               Password
             </label>
             <div className="relative">
@@ -130,7 +130,7 @@ export default function Register() {
                 id="password"
                 name="password"
                 placeholder="••••••••"
-                className="w-full pl-11 pr-11 py-2.5 bg-slate-50/80 border border-slate-200 rounded-xl text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-rose-500/20 focus:border-rose-500 focus:bg-white transition-all text-sm font-medium"
+                className="w-full pl-11 pr-11 py-2.5 bg-slate-50/80 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 rounded-xl text-slate-800 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-rose-500/20 focus:border-rose-500 focus:bg-white dark:focus:bg-slate-800 transition-all text-sm font-medium"
                 onChange={(e) => setPassword(e.target.value)}
                 value={password}
                 required
@@ -138,7 +138,7 @@ export default function Register() {
               <button
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}
-                className="absolute inset-y-0 right-0 pr-3.5 flex items-center text-slate-400 hover:text-slate-600 transition-colors"
+                className="absolute inset-y-0 right-0 pr-3.5 flex items-center text-slate-400 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-300 transition-colors"
               >
                 {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
               </button>
@@ -147,7 +147,7 @@ export default function Register() {
 
           {/* Confirm Password */}
           <div className="space-y-1.5">
-            <label htmlFor="confirmPassword" className="block text-xs font-bold uppercase tracking-wider text-slate-600">
+            <label htmlFor="confirmPassword" className="block text-xs font-bold uppercase tracking-wider text-slate-600 dark:text-slate-400">
               Confirm Password
             </label>
             <div className="relative">
@@ -159,7 +159,7 @@ export default function Register() {
                 id="confirmPassword"
                 name="confirmPassword"
                 placeholder="••••••••"
-                className="w-full pl-11 pr-4 py-2.5 bg-slate-50/80 border border-slate-200 rounded-xl text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-rose-500/20 focus:border-rose-500 focus:bg-white transition-all text-sm font-medium"
+                className="w-full pl-11 pr-4 py-2.5 bg-slate-50/80 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 rounded-xl text-slate-800 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-rose-500/20 focus:border-rose-500 focus:bg-white dark:focus:bg-slate-800 transition-all text-sm font-medium"
                 onChange={(e) => setConfirmPassoword(e.target.value)}
                 value={confirmPassword}
                 required
@@ -169,7 +169,7 @@ export default function Register() {
 
           {/* Error Message */}
           {errorMessage && (
-            <div className="flex items-center gap-2 p-3 rounded-xl bg-rose-50 border border-rose-200 text-rose-700 text-xs font-semibold">
+            <div className="flex items-center gap-2 p-3 rounded-xl bg-rose-50 dark:bg-rose-950/50 border border-rose-200 dark:border-rose-900 text-rose-700 dark:text-rose-300 text-xs font-semibold">
               <AlertCircle className="w-4 h-4 shrink-0" />
               <span>{errorMessage}</span>
             </div>
@@ -193,7 +193,7 @@ export default function Register() {
         </form>
 
         {/* Footer link */}
-        <p className="mt-6 text-center text-sm font-medium text-slate-600">
+        <p className="mt-6 text-center text-sm font-medium text-slate-600 dark:text-slate-400">
           Already have an account?{" "}
           <Link
             href="/login"

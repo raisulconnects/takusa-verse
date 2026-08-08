@@ -28,10 +28,10 @@ export default function ShowPosts({ params }) {
   if (!post) {
     return (
       <div className="min-h-[70vh] flex flex-col items-center justify-center p-6">
-        <div className="bg-white/80 border border-slate-200/60 p-8 rounded-3xl animate-pulse space-y-4 max-w-2xl w-full shadow-xs">
-          <div className="h-6 bg-slate-200 rounded-full w-1/4" />
-          <div className="h-5 bg-slate-200 rounded-lg w-3/4" />
-          <div className="h-44 bg-slate-200 rounded-2xl" />
+        <div className="bg-white/80 dark:bg-slate-900/80 border border-slate-200/60 dark:border-slate-800 p-8 rounded-3xl animate-pulse space-y-4 max-w-2xl w-full shadow-xs">
+          <div className="h-6 bg-slate-200 dark:bg-slate-800 rounded-full w-1/4" />
+          <div className="h-5 bg-slate-200 dark:bg-slate-800 rounded-lg w-3/4" />
+          <div className="h-44 bg-slate-200 dark:bg-slate-800 rounded-2xl" />
         </div>
       </div>
     );
@@ -43,7 +43,7 @@ export default function ShowPosts({ params }) {
         {/* Back Link */}
         <Link
           href="/public-feed"
-          className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-white border border-slate-200/80 text-slate-700 text-xs sm:text-sm font-bold shadow-xs hover:bg-slate-100 transition-colors"
+          className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-700 text-slate-700 dark:text-slate-200 text-xs sm:text-sm font-bold shadow-xs hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
         >
           <ArrowLeft className="w-4 h-4" />
           <span>Back to Feed</span>
@@ -53,10 +53,10 @@ export default function ShowPosts({ params }) {
         <Post post={post} />
 
         {/* Dedicated Comments Card */}
-        <div className="bg-white/90 backdrop-blur-md border border-slate-200/80 rounded-3xl p-6 shadow-sm">
+        <div className="bg-white/90 dark:bg-slate-900/90 backdrop-blur-md border border-slate-200/80 dark:border-slate-800 rounded-3xl p-6 shadow-sm">
           <div className="flex items-center gap-2 mb-2">
             <MessageSquare className="w-5 h-5 text-rose-500" />
-            <h2 className="text-lg font-extrabold text-slate-900 tracking-tight">
+            <h2 className="text-lg font-extrabold text-slate-900 dark:text-white tracking-tight">
               Discussion & Comments
             </h2>
           </div>

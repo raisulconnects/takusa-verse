@@ -3,12 +3,12 @@
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import timeAgo from "../../../lib/timeAgo";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import CommentSection from "./CommentSection";
 import Link from "next/link";
 import Image from "next/image";
 import { useFeedProvider } from "../Providers/FeedProvider";
-import { Heart, MessageSquare, Clock, Pencil, Trash2, Check, ExternalLink } from "lucide-react";
+import { Heart, MessageSquare, Clock, Pencil, Trash2, Check, AlertTriangle } from "lucide-react";
 
 export default function Post({ post }) {
   const { triggerRefreseh } = useFeedProvider();
@@ -16,6 +16,14 @@ export default function Post({ post }) {
   const router = useRouter();
   const [isEditing, setIsEditing] = useState(false);
   const [editedText, setEditedText] = useState(post.post);
+  const [confirmingDelete, setConfirmingDelete] = useState(false);
+  const confirmTimer = useRef(null);
+
+  useEffect(() => {
+    return () => {
+      if (confirmTimer.current) clearTimeout(confirmTimer.current);
+    };
+  }, []);
 
   // 🪄 Optimistic UI states
   const [optimisticLikes, setOptimisticLikes] = useState(post.likes.length);
@@ -33,6 +41,17 @@ export default function Post({ post }) {
     } catch (e) {
       console.log(e.message);
     }
+  };
+
+  const handleDeleteClick = (postid) => {
+    if (!confirmingDelete) {
+      setConfirmingDelete(true);
+      confirmTimer.current = setTimeout(() => setConfirmingDelete(false), 3000);
+      return;
+    }
+    if (confirmTimer.current) clearTimeout(confirmTimer.current);
+    setConfirmingDelete(false);
+    handleDelete(postid);
   };
 
   const handleLike = async (postid) => {
@@ -91,7 +110,7 @@ export default function Post({ post }) {
     .toUpperCase();
 
   return (
-    <article className="bg-white/90 backdrop-blur-md border border-slate-200/80 rounded-3xl p-5 sm:p-6 shadow-sm hover:shadow-md transition-all duration-300 max-w-2xl mx-auto mt-6 group">
+    <article className="bg-white/90 dark:bg-slate-900/90 backdrop-blur-md border border-slate-200/80 dark:border-slate-800 rounded-3xl p-5 sm:p-6 shadow-sm hover:shadow-md transition-all duration-300 max-w-2xl mx-auto mt-6 group">
       {/* Author & Header Bar */}
       <div className="flex items-center justify-between gap-3 mb-4">
         <div className="flex items-center gap-3">
@@ -100,18 +119,18 @@ export default function Post({ post }) {
             {userInitials}
           </div>
           <div className="flex flex-col">
-            <span className="font-bold text-slate-900 text-sm sm:text-base tracking-tight">
+            <span className="font-bold text-slate-900 dark:text-slate-100 text-sm sm:text-base tracking-tight">
               {userName}
             </span>
-            <div className="flex items-center gap-1 text-[11px] font-semibold text-slate-600">
-              <Clock className="w-3 h-3 text-slate-500" />
+            <div className="flex items-center gap-1 text-[11px] font-semibold text-slate-600 dark:text-slate-400">
+              <Clock className="w-3 h-3 text-slate-500 dark:text-slate-400" />
               <span>{postDateTime}</span>
             </div>
           </div>
         </div>
 
         {/* Reaction Pill Badge */}
-        <div className="flex items-center gap-1.5 px-3 py-1 bg-rose-50 border border-rose-100 rounded-full text-xs font-bold text-rose-700">
+        <div className="flex items-center gap-1.5 px-3 py-1 bg-rose-50 dark:bg-rose-950/50 border border-rose-100 dark:border-rose-900/50 rounded-full text-xs font-bold text-rose-700 dark:text-rose-300">
           <Heart className={`w-3.5 h-3.5 ${optimisticLikes > 0 ? "fill-rose-500 text-rose-500" : "text-rose-400"}`} />
           <span>{optimisticLikes} {optimisticLikes === 1 ? "Like" : "Likes"}</span>
         </div>
@@ -119,14 +138,14 @@ export default function Post({ post }) {
 
       {/* Post Title */}
       {post.title && (
-        <h2 className="text-lg sm:text-xl font-extrabold text-slate-900 mb-3 tracking-tight leading-snug break-words">
+        <h2 className="text-lg sm:text-xl font-extrabold text-slate-900 dark:text-white mb-3 tracking-tight leading-snug break-words">
           {post.title}
         </h2>
       )}
 
       {/* Display image if present */}
       {post.imageUrl && (
-        <div className="relative w-full rounded-2xl overflow-hidden mb-4 bg-slate-100 border border-slate-200/60 shadow-xs">
+        <div className="relative w-full rounded-2xl overflow-hidden mb-4 bg-slate-100 dark:bg-slate-800 border border-slate-200/60 dark:border-slate-800 shadow-xs">
           <Image
             src={post.imageUrl}
             alt="Post Image"
@@ -143,24 +162,24 @@ export default function Post({ post }) {
           <textarea
             value={editedText}
             onChange={(e) => setEditedText(e.target.value)}
-            className="w-full p-4 border border-rose-300 rounded-2xl bg-rose-50/50 text-slate-800 focus:outline-none focus:ring-2 focus:ring-rose-500/20 focus:border-rose-500 shadow-inner transition-all duration-200 resize-none text-sm font-medium"
+            className="w-full p-4 border border-rose-300 dark:border-slate-700 rounded-2xl bg-rose-50/50 dark:bg-slate-800 text-slate-800 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-rose-500/20 focus:border-rose-500 shadow-inner transition-all duration-200 resize-none text-sm font-medium"
             rows={3}
           />
         </div>
       ) : (
-        <p className="text-slate-700 text-sm sm:text-base leading-relaxed mb-4 pl-3 border-l-2 border-rose-400 font-medium whitespace-pre-line">
+        <p className="text-slate-700 dark:text-slate-200 text-sm sm:text-base leading-relaxed mb-4 pl-3 border-l-2 border-rose-400 dark:border-rose-500 font-medium whitespace-pre-line">
           {post.post}
         </p>
       )}
 
       {/* Action Buttons Bar */}
-      <div className="flex flex-wrap items-center gap-2 pt-3 border-t border-slate-100">
+      <div className="flex flex-wrap items-center gap-2 pt-3 border-t border-slate-100 dark:border-slate-800">
         {/* Like Button */}
         <button
           className={`flex-1 min-w-[90px] py-2 px-3 rounded-xl font-bold text-xs sm:text-sm flex items-center justify-center gap-1.5 transition-all duration-200 cursor-pointer active:scale-95 shadow-xs ${
             optimisticIsLiked
               ? "bg-rose-600 text-white shadow-rose-500/20 hover:bg-rose-700"
-              : "bg-slate-100 text-slate-700 hover:bg-rose-50 hover:text-rose-600"
+              : "bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-200 hover:bg-rose-50 dark:hover:bg-slate-700 hover:text-rose-600 dark:hover:text-rose-400"
           }`}
           onClick={() => handleLike(post._id)}
         >
@@ -173,7 +192,7 @@ export default function Post({ post }) {
           onClick={() => {
             router.push(`/public-feed/${post._id}`);
           }}
-          className="flex-1 min-w-[110px] py-2 px-3 rounded-xl font-bold text-xs sm:text-sm flex items-center justify-center gap-1.5 bg-slate-900 text-white hover:bg-slate-800 transition-all duration-200 shadow-xs cursor-pointer active:scale-95"
+          className="flex-1 min-w-[110px] py-2 px-3 rounded-xl font-bold text-xs sm:text-sm flex items-center justify-center gap-1.5 bg-slate-900 dark:bg-slate-800 dark:hover:bg-slate-700 text-white hover:bg-slate-800 transition-all duration-200 shadow-xs cursor-pointer active:scale-95 border dark:border-slate-700"
         >
           <MessageSquare className="w-4 h-4" />
           <span>Comments</span>
@@ -197,7 +216,7 @@ export default function Post({ post }) {
           </button>
         ) : post?.user?._id === data?.user?.id ? (
           <button
-            className="py-2 px-3 rounded-xl font-semibold text-xs sm:text-sm bg-slate-100 text-slate-700 hover:bg-slate-200 transition-all duration-200 flex items-center justify-center gap-1.5 cursor-pointer"
+            className="py-2 px-3 rounded-xl font-semibold text-xs sm:text-sm bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700 transition-all duration-200 flex items-center justify-center gap-1.5 cursor-pointer"
             onClick={() => setIsEditing(true)}
           >
             <Pencil className="w-3.5 h-3.5" />
@@ -208,26 +227,43 @@ export default function Post({ post }) {
         {/* Delete Button */}
         {post?.user?._id === data?.user?.id && data?.user?.role !== "admin" && (
           <button
-            className="py-2 px-3 rounded-xl font-semibold text-xs sm:text-sm bg-rose-50 text-rose-600 hover:bg-rose-100 transition-all duration-200 flex items-center justify-center gap-1.5 cursor-pointer"
-            onClick={() => handleDelete(post._id)}
+            className={`py-2 px-3 rounded-xl font-semibold text-xs sm:text-sm transition-all duration-200 flex items-center justify-center gap-1.5 cursor-pointer ${
+              confirmingDelete
+                ? "bg-rose-600 text-white shadow-md shadow-rose-500/30 hover:bg-rose-700"
+                : "bg-rose-50 dark:bg-rose-950/40 text-rose-600 dark:text-rose-400 hover:bg-rose-100 dark:hover:bg-rose-900/60"
+            }`}
+            onClick={() => handleDeleteClick(post._id)}
           >
-            <Trash2 className="w-3.5 h-3.5" />
-            <span>Delete</span>
+            {confirmingDelete ? (
+              <AlertTriangle className="w-3.5 h-3.5" />
+            ) : (
+              <Trash2 className="w-3.5 h-3.5" />
+            )}
+            <span>{confirmingDelete ? "Click again to confirm" : "Delete"}</span>
           </button>
         )}
 
         {/* Admin Delete Button */}
         {data?.user?.role === "admin" && (
           <button
-            className="py-2 px-3 rounded-xl font-semibold text-xs sm:text-sm bg-rose-100 text-rose-700 hover:bg-rose-200 transition-all duration-200 flex items-center justify-center gap-1.5 cursor-pointer"
-            onClick={() => handleDelete(post._id)}
+            className={`py-2 px-3 rounded-xl font-semibold text-xs sm:text-sm transition-all duration-200 flex items-center justify-center gap-1.5 cursor-pointer ${
+              confirmingDelete
+                ? "bg-rose-600 text-white shadow-md shadow-rose-500/30 hover:bg-rose-700"
+                : "bg-rose-100 dark:bg-rose-950/60 text-rose-700 dark:text-rose-300 hover:bg-rose-200 dark:hover:bg-rose-900"
+            }`}
+            onClick={() => handleDeleteClick(post._id)}
           >
-            <Trash2 className="w-3.5 h-3.5" />
-            <span>Admin Delete</span>
+            {confirmingDelete ? (
+              <AlertTriangle className="w-3.5 h-3.5" />
+            ) : (
+              <Trash2 className="w-3.5 h-3.5" />
+            )}
+            <span>{confirmingDelete ? "Click again to confirm" : "Admin Delete"}</span>
           </button>
         )}
       </div>
     </article>
   );
 }
+
 
