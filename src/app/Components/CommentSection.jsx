@@ -101,7 +101,7 @@ export default function CommentSection({ postId }) {
           }}
           type="text"
           placeholder="Write a comment..."
-          className="flex-1 bg-transparent outline-none text-xs sm:text-sm text-slate-800 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-500 font-medium"
+          className="flex-1 min-w-0 bg-transparent outline-none text-xs sm:text-sm text-slate-800 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-500 font-medium"
         />
         <button
           className="bg-slate-900 dark:bg-rose-600 hover:bg-rose-600 dark:hover:bg-rose-700 text-white text-xs px-3.5 py-2 rounded-xl font-bold transition-all duration-200 disabled:opacity-50 flex items-center gap-1.5 cursor-pointer shrink-0"
