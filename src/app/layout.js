@@ -4,6 +4,7 @@ import SessionContextProvider from "./Providers/SessionProvider";
 import { ThemeProvider } from "./Providers/ThemeProvider";
 import Navbar from "./Components/Navbar";
 import Footer from "./Components/Footer";
+import { Analytics } from "@vercel/analytics/next";
 
 const plusJakarta = Plus_Jakarta_Sans({
   variable: "--font-plus-jakarta",
@@ -49,6 +50,7 @@ export default function RootLayout({ children }) {
             <Footer />
           </SessionContextProvider>
         </ThemeProvider>
+        <Analytics />
       </body>
     </html>
   );
