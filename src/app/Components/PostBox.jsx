@@ -3,7 +3,7 @@
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { Loader2, X, Image as ImageIcon, Type, Send, Sparkles } from "lucide-react";
+import { Loader2, X, Image as ImageIcon, Video, Type, Send, Sparkles } from "lucide-react";
 import { useFeedProvider } from "../Providers/FeedProvider";
 
 export default function PostBox() {
@@ -16,21 +16,54 @@ export default function PostBox() {
 
   const [imageFile, setImageFile] = useState(null);
   const [imagePreview, setImagePreview] = useState(null);
+  const [videoFile, setVideoFile] = useState(null);
+  const [videoPreview, setVideoPreview] = useState(null);
   const [uploading, setUploading] = useState(false);
 
   const nextRouter = useRouter();
+
+  const hasContent = post.trim() || imageFile || videoFile;
 
   const handleImageChange = (e) => {
     const file = e.target.files[0];
     if (file) {
       setImageFile(file);
       setImagePreview(URL.createObjectURL(file));
+      setVideoFile(null);
+      setVideoPreview(null);
     }
+  };
+
+  const handleVideoChange = (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    if (!file.type.startsWith("video/")) {
+      alert("Please select a valid video file.");
+      e.target.value = "";
+      return;
+    }
+
+    if (file.size > 50 * 1024 * 1024) {
+      alert("Video is too large. Maximum allowed size is 50MB.");
+      e.target.value = "";
+      return;
+    }
+
+    setVideoFile(file);
+    setVideoPreview(URL.createObjectURL(file));
+    setImageFile(null);
+    setImagePreview(null);
   };
 
   const removeImage = () => {
     setImageFile(null);
     setImagePreview(null);
+  };
+
+  const removeVideo = () => {
+    setVideoFile(null);
+    setVideoPreview(null);
   };
 
   const uploadToCloudinary = async () => {
@@ -56,14 +89,40 @@ export default function PostBox() {
     }
   };
 
+  const uploadVideoToCloudinary = async () => {
+    if (!videoFile) return null;
+    setUploading(true);
+    const formData = new FormData();
+    formData.append("file", videoFile);
+    formData.append("upload_preset", "takusa_blog");
+
+    try {
+      const res = await fetch(
+        "https://api.cloudinary.com/v1_1/dh5r86rqw/video/upload",
+        { method: "POST", body: formData }
+      );
+
+      const data = await res.json();
+      setUploading(false);
+      return data.secure_url;
+    } catch (err) {
+      console.error("Video upload failed:", err);
+      setUploading(false);
+      return null;
+    }
+  };
+
   const handlePost = async () => {
-    if (!post.trim()) return;
+    if (!post.trim() && !imageFile && !videoFile) return;
 
     try {
       setLoading(true);
 
       let uploadedUrl = null;
       if (imageFile) uploadedUrl = await uploadToCloudinary();
+
+      let uploadedVideoUrl = null;
+      if (videoFile) uploadedVideoUrl = await uploadVideoToCloudinary();
 
       const res = await fetch("/api/posts", {
         method: "POST",
@@ -74,6 +133,7 @@ export default function PostBox() {
           user: session.user.id,
           comments: [],
           imageUrl: uploadedUrl,
+          videoUrl: uploadedVideoUrl,
         }),
       });
 
@@ -83,6 +143,8 @@ export default function PostBox() {
       setTitle("");
       setImageFile(null);
       setImagePreview(null);
+      setVideoFile(null);
+      setVideoPreview(null);
 
       setLoading(false);
       nextRouter.refresh();
@@ -168,9 +230,29 @@ export default function PostBox() {
         </div>
       )}
 
+      {/* VIDEO PREVIEW BOX */}
+      {videoPreview && (
+        <div className="relative mt-3 inline-block group">
+          <video
+            src={videoPreview}
+            className="w-52 h-36 object-contain rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm bg-black"
+            controls
+            muted
+          />
+          <button
+            type="button"
+            onClick={removeVideo}
+            className="absolute -top-2 -right-2 p-1.5 bg-slate-900/90 text-white rounded-full hover:bg-rose-600 transition-colors shadow-md cursor-pointer"
+            title="Remove Video"
+          >
+            <X className="w-4 h-4" />
+          </button>
+        </div>
+      )}
+
       {/* ACTIONS TOOLBAR */}
       <div className="flex items-center justify-between mt-4 pt-3 border-t border-slate-100 dark:border-slate-800 gap-2">
-        <div className="flex items-center gap-2">
+        <div className="flex flex-wrap items-center gap-2">
           {/* Upload Image Button */}
           <label
             htmlFor="imageUpload"
@@ -184,6 +266,22 @@ export default function PostBox() {
             type="file"
             accept="image/*"
             onChange={handleImageChange}
+            className="hidden"
+          />
+
+          {/* Upload Video Button */}
+          <label
+            htmlFor="videoUpload"
+            className="flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs sm:text-sm font-semibold text-slate-600 dark:text-slate-300 hover:text-rose-600 dark:hover:text-rose-400 hover:bg-rose-50 dark:hover:bg-slate-800 transition-all cursor-pointer border border-transparent hover:border-rose-200 dark:hover:border-slate-700"
+          >
+            <Video className="w-4 h-4 text-rose-500" />
+            <span>{videoFile ? "Change Video" : "Add Video"}</span>
+          </label>
+          <input
+            id="videoUpload"
+            type="file"
+            accept="video/*"
+            onChange={handleVideoChange}
             className="hidden"
           />
 
@@ -205,7 +303,7 @@ export default function PostBox() {
         {/* Post Button */}
         <button
           className="bg-gradient-to-r from-rose-600 to-pink-600 hover:from-rose-700 hover:to-pink-700 text-white px-5 py-2 rounded-xl font-bold text-xs sm:text-sm shadow-md shadow-rose-500/20 hover:shadow-lg transition-all duration-200 disabled:opacity-50 flex items-center gap-2 cursor-pointer active:scale-95"
-          disabled={!post.trim() || loading || uploading}
+          disabled={!hasContent || loading || uploading}
           onClick={handlePost}
         >
           {uploading ? (

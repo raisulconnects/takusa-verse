@@ -13,7 +13,10 @@ export async function POST(DATA) {
   try {
     await connectDB();
 
-    if (!data.post || !data.user) {
+    if (
+      !data.user ||
+      ((!data.post || !data.post.trim()) && !data.imageUrl && !data.videoUrl)
+    ) {
       return NextResponse.json(
         { error: "Missing required fields" },
         { status: 400 }

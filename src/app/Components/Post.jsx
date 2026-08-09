@@ -186,6 +186,18 @@ export default function Post({ post }) {
         </button>
       )}
 
+      {/* Display video if present */}
+      {post.videoUrl && (
+        <div className="relative w-full rounded-2xl overflow-hidden mb-4 bg-black border border-slate-200/60 dark:border-slate-800 shadow-xs">
+          <video
+            src={post.videoUrl}
+            controls
+            preload="metadata"
+            className="w-full max-h-[480px] bg-black"
+          />
+        </div>
+      )}
+
       {/* Image Modal (portal to body so it covers the whole viewport) */}
       {lightboxOpen &&
         post.imageUrl &&
