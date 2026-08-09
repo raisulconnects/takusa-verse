@@ -4,6 +4,7 @@ import SessionContextProvider from "./Providers/SessionProvider";
 import { ThemeProvider } from "./Providers/ThemeProvider";
 import Navbar from "./Components/Navbar";
 import Footer from "./Components/Footer";
+import OnboardingTour from "./Components/OnboardingTour";
 import { Analytics } from "@vercel/analytics/next";
 
 const plusJakarta = Plus_Jakarta_Sans({
@@ -48,6 +49,7 @@ export default function RootLayout({ children }) {
             <Navbar />
             <div className="flex-1">{children}</div>
             <Footer />
+            <OnboardingTour />
           </SessionContextProvider>
         </ThemeProvider>
         <Analytics />
